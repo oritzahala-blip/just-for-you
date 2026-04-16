@@ -1,105 +1,1025 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>מבחן דיאגנוסטי מתמטיקה כיתה ה׳</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body{font-family:Arial;background:#f5f7fa;margin:0}
-.container{max-width:900px;margin:20px auto;background:#fff;padding:20px;border-radius:12px}
-.section{display:none}
-.section.active{display:block}
-.question{margin-bottom:15px;padding:12px;background:#f9fafb;border-radius:8px}
-button{padding:10px;border:none;border-radius:8px;background:#2563eb;color:#fff;cursor:pointer}
-.hidden{display:none}
-.ltr{direction:ltr}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>מבדק דיאגנוסטי במתמטיקה – כיתה ה׳</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --line:#dbe3ef;
+      --text:#1f2937;
+      --muted:#667085;
+      --primary:#155eef;
+      --secondary:#667085;
+      --success:#067647;
+      --warning:#b54708;
+      --danger:#b42318;
+      --soft:#f8fbff;
+      --soft2:#fffbea;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .container{
+      max-width:1040px;
+      margin:24px auto;
+      background:var(--card);
+      border-radius:18px;
+      padding:28px;
+      box-shadow:0 8px 24px rgba(0,0,0,.08);
+    }
+    h1,h2,h3{margin-top:0;line-height:1.35}
+    p,li{line-height:1.7}
+    .lead{color:var(--muted);margin-bottom:22px}
+    .section{display:none}
+    .section.active{display:block}
+    .question{
+      margin-bottom:18px;
+      padding:16px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fafbfd;
+    }
+    .question p{margin:0 0 8px 0}
+    .subgrid,.meta-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .meta-grid{gap:16px}
+    @media (max-width: 760px){
+      .subgrid,.meta-grid{grid-template-columns:1fr}
+      .btn-row{flex-direction:column}
+      button{width:100%}
+    }
+    label{display:block;font-weight:bold;margin-top:8px}
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select,
+    input[type="password"]{
+      width:100%;
+      margin-top:8px;
+      padding:11px 12px;
+      border:1px solid #cbd5e1;
+      border-radius:10px;
+      background:#fff;
+      color:#111827;
+      font-size:16px;
+      text-decoration:none;
+    }
+    textarea{min-height:110px;resize:vertical}
+    .btn-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:24px;
+    }
+    button{
+      border:none;
+      border-radius:10px;
+      padding:12px 18px;
+      cursor:pointer;
+      font-size:16px;
+      background:var(--primary);
+      color:white;
+    }
+    button.secondary{background:var(--secondary)}
+    button.ghost{background:#12b76a}
+    button.copybtn{background:#194185}
+    .progress{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:16px;
+    }
+    .example{
+      margin-top:10px;
+      padding:10px 12px;
+      border:1px solid #f0df9b;
+      background:var(--soft2);
+      border-radius:10px;
+      color:#5b4a00;
+      font-size:14px;
+    }
+    .note{
+      margin-top:10px;
+      font-size:14px;
+      color:var(--muted);
+    }
+    .ltr-math{
+      direction:ltr;
+      unicode-bidi:bidi-override;
+      display:inline-block;
+      font-weight:bold;
+      color:#111827;
+      text-decoration:none;
+    }
+    .hidden{display:none}
+    .result-box{
+      margin-top:24px;
+      padding:22px;
+      border:1px solid #dbeafe;
+      background:var(--soft);
+      border-radius:14px;
+      line-height:1.8;
+    }
+    .teacher-box{
+      margin-top:24px;
+      padding:18px;
+      border:1px solid #f4d38b;
+      background:#fffaf0;
+      border-radius:14px;
+    }
+    .score-big{
+      font-size:56px;
+      font-weight:700;
+      line-height:1;
+      margin:0 0 8px 0;
+    }
+    .score-sub{
+      font-size:18px;
+      color:var(--muted);
+      margin:0;
+    }
+    .status-ok{color:var(--success);font-weight:bold}
+    .status-bad{color:var(--danger);font-weight:bold}
+    .status-warn{color:var(--warning);font-weight:bold}
+    .domain-card{
+      margin-bottom:16px;
+      padding:14px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:12px;
+    }
+    .pill{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:13px;
+      margin-inline-start:8px;
+      background:#eef4ff;
+      color:#194185;
+    }
+    .json-area{
+      width:100%;
+      min-height:300px;
+      font-family:monospace;
+      direction:ltr;
+      text-align:left;
+      white-space:pre;
+    }
+    .small-title{
+      font-size:15px;
+      color:#344054;
+      font-weight:bold;
+      margin-bottom:6px;
+    }
+  </style>
 </head>
-
 <body>
-<div class="container">
+  <div class="container">
+    <h1>מבדק דיאגנוסטי במתמטיקה – כיתה ה׳</h1>
+    <p class="lead">המבדק בנוי לפי תחומי תוכן. בסיום יוצג לתלמיד רק ציון מספרי. למורה יש אזור מוגן בסיסמה עם ניתוח מפורט ונתוני אבחון מובנים, שנועדו גם לשלב הבא של התאמת תכנית לימודים אישית.</p>
 
-<h1>מבחן דיאגנוסטי במתמטיקה</h1>
+    <form id="quizForm">
+      <!-- פתיחה -->
+      <div class="section active">
+        <h2>דף הוראות לנבחן</h2>
+        <div class="question">
+          <ul>
+            <li>ענה על כל השאלות ככל יכולתך.</li>
+            <li>ברוב השאלות יש לבחור תשובה מתוך האפשרויות.</li>
+            <li>בשאלות הפתוחות חשוב לענות בדיוק לפי מה שמתבקש.</li>
+            <li>הביטויים החשבוניים במבדק מוצגים משמאל לימין כדי למנוע בלבול.</li>
+            <li>בסיום יוצג לך רק הציון הסופי.</li>
+            <li>זמן מומלץ: 25 עד 35 דקות.</li>
+          </ul>
+        </div>
 
-<form id="quiz">
+        <div class="meta-grid">
+          <div class="question">
+            <p><strong>שם התלמיד</strong></p>
+            <input type="text" id="studentName" placeholder="הזן שם" />
+          </div>
+          <div class="question">
+            <p><strong>כיתה</strong></p>
+            <input type="text" id="studentClass" placeholder="לדוגמה: ה׳2" />
+          </div>
+        </div>
 
-<div class="section active">
-<h2>הוראות</h2>
-<p>ענה על כל השאלות. בסיום יוצג רק הציון.</p>
-<button type="button" onclick="next()">התחל</button>
-</div>
+        <div class="btn-row">
+          <button type="button" onclick="nextSection()">התחל מבדק</button>
+        </div>
+      </div>
 
-<div class="section">
-<h2>מספרים ופעולות</h2>
+      <!-- תחום 1 -->
+      <div class="section">
+        <div class="progress">תחום 1 מתוך 6 • מספרים ופעולות</div>
+        <h2>מספרים ופעולות</h2>
 
-<div class="question">1. <span class="ltr">3487+2659</span>
-<input id="q1"></div>
+        <div class="question">
+          <p><strong>1.</strong> חשב: <span class="ltr-math">3,487 + 2,659</span></p>
+          <select id="q1">
+            <option value="">בחר תשובה</option>
+            <option value="6046">6,046</option>
+            <option value="6146">6,146</option>
+            <option value="6246">6,246</option>
+            <option value="6346">6,346</option>
+          </select>
+        </div>
 
-<div class="question">2. <span class="ltr">9685-4285</span>
-<input id="q2"></div>
+        <div class="question">
+          <p><strong>2.</strong> חשב: <span class="ltr-math">9,685 - 4,285</span></p>
+          <select id="q2">
+            <option value="">בחר תשובה</option>
+            <option value="5300">5,300</option>
+            <option value="5400">5,400</option>
+            <option value="5500">5,500</option>
+            <option value="5600">5,600</option>
+          </select>
+        </div>
 
-<button type="button" onclick="next()">המשך</button>
-</div>
+        <div class="question">
+          <p><strong>3.</strong> חשב: <span class="ltr-math">48 × 6</span></p>
+          <select id="q3">
+            <option value="">בחר תשובה</option>
+            <option value="268">268</option>
+            <option value="278">278</option>
+            <option value="288">288</option>
+            <option value="298">298</option>
+          </select>
+        </div>
 
-<div class="section">
-<h2>חשיבה</h2>
+        <div class="question">
+          <p><strong>4.</strong> חשב: <span class="ltr-math">156 ÷ 12</span></p>
+          <select id="q4">
+            <option value="">בחר תשובה</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+          </select>
+        </div>
 
-<div class="question">
-כתוב שני מספרים שסכומם 100 והסבר
-<textarea id="q3"></textarea>
-</div>
+        <div class="question">
+          <p><strong>5.</strong> איזה מספר גדול יותר?</p>
+          <select id="q5">
+            <option value="">בחר תשובה</option>
+            <option value="5409">5,409</option>
+            <option value="5490">5,490</option>
+            <option value="equal">שניהם שווים</option>
+            <option value="unknown">אי אפשר לדעת</option>
+          </select>
+        </div>
 
-<button type="button" onclick="finish()">סיום</button>
-</div>
+        <div class="question">
+          <p><strong>6.</strong> מה הערך של הספרה 7 במספר <span class="ltr-math">27,483</span>?</p>
+          <select id="q6">
+            <option value="">בחר תשובה</option>
+            <option value="7">7</option>
+            <option value="70">70</option>
+            <option value="700">700</option>
+            <option value="7000">7,000</option>
+          </select>
+        </div>
 
-</form>
+        <div class="btn-row">
+          <button type="button" class="secondary" onclick="prevSection()">חזרה</button>
+          <button type="button" onclick="nextSection()">הבא</button>
+        </div>
+      </div>
 
-<div id="result" class="hidden"></div>
+      <!-- תחום 2 -->
+      <div class="section">
+        <div class="progress">תחום 2 מתוך 6 • שברים</div>
+        <h2>שברים</h2>
 
-<div id="teacher" class="hidden">
-<input id="pass" placeholder="קוד">
-<button onclick="openTeacher()">כניסה</button>
-<div id="analysis"></div>
-</div>
+        <div class="question">
+          <p><strong>7.</strong> איזה שבר גדול יותר?</p>
+          <select id="q7">
+            <option value="">בחר תשובה</option>
+            <option value="3/4">3/4</option>
+            <option value="2/3">2/3</option>
+            <option value="equal">שניהם שווים</option>
+            <option value="unknown">אי אפשר לדעת</option>
+          </select>
+        </div>
 
-</div>
+        <div class="question">
+          <p><strong>8.</strong> חשב: <span class="ltr-math">1/2 + 1/4</span></p>
+          <select id="q8">
+            <option value="">בחר תשובה</option>
+            <option value="2/6">2/6</option>
+            <option value="3/4">3/4</option>
+            <option value="4/6">4/6</option>
+            <option value="1">1</option>
+          </select>
+        </div>
 
-<script>
+        <div class="question">
+          <p><strong>9.</strong> איזה חלק נשאר אם אכלו <span class="ltr-math">3/8</span> מהעוגה?</p>
+          <select id="q9">
+            <option value="">בחר תשובה</option>
+            <option value="3/8">3/8</option>
+            <option value="4/8">4/8</option>
+            <option value="5/8">5/8</option>
+            <option value="6/8">6/8</option>
+          </select>
+        </div>
 
-let i=0;
-let sections=document.querySelectorAll(".section");
+        <div class="question">
+          <p><strong>10.</strong> מתוך 8 חלקים שווים, 6 צבועים. איזה שבר מתאים למצב?</p>
+          <select id="q10">
+            <option value="">בחר תשובה</option>
+            <option value="2/8">2/8</option>
+            <option value="6/8">6/8</option>
+            <option value="8/6">8/6</option>
+            <option value="6/6">6/6</option>
+          </select>
+        </div>
 
-function next(){
-sections[i].classList.remove("active");
-i++;
-sections[i].classList.add("active");
-}
+        <div class="question">
+          <p><strong>11.</strong> מה גדול יותר?</p>
+          <select id="q11">
+            <option value="">בחר תשובה</option>
+            <option value="4/5">4/5</option>
+            <option value="7/10">7/10</option>
+            <option value="equal">שניהם שווים</option>
+            <option value="unknown">אי אפשר לדעת</option>
+          </select>
+        </div>
 
-function finish(){
-let score=0;
+        <div class="btn-row">
+          <button type="button" class="secondary" onclick="prevSection()">חזרה</button>
+          <button type="button" onclick="nextSection()">הבא</button>
+        </div>
+      </div>
 
-if(document.getElementById("q1").value==6146) score++;
-if(document.getElementById("q2").value==5400) score++;
+      <!-- תחום 3 -->
+      <div class="section">
+        <div class="progress">תחום 3 מתוך 6 • בעיות מילוליות</div>
+        <h2>בעיות מילוליות</h2>
 
-document.getElementById("quiz").classList.add("hidden");
+        <div class="question">
+          <p><strong>12.</strong> בכיתה יש 32 תלמידים. כל תלמיד קיבל 4 מחברות. כמה מחברות חולקו בסך הכול?</p>
+          <select id="q12">
+            <option value="">בחר תשובה</option>
+            <option value="96">96</option>
+            <option value="112">112</option>
+            <option value="128">128</option>
+            <option value="136">136</option>
+          </select>
+        </div>
 
-document.getElementById("result").innerHTML="ציון: "+score+"/2";
-document.getElementById("result").classList.remove("hidden");
+        <div class="question">
+          <p><strong>13.</strong> אורך מסלול ריצה הוא 400 מטר. יעל רצה 7 סיבובים. כמה מטרים רצה בסך הכול?</p>
+          <select id="q13">
+            <option value="">בחר תשובה</option>
+            <option value="2400">2,400</option>
+            <option value="2600">2,600</option>
+            <option value="2800">2,800</option>
+            <option value="3000">3,000</option>
+          </select>
+        </div>
 
-document.getElementById("teacher").classList.remove("hidden");
+        <div class="question">
+          <p><strong>14.</strong> מחיר חולצה הוא 80 ₪. יש הנחה של 20%. מה יהיה המחיר לאחר ההנחה?</p>
+          <div class="example">רמז: קודם מחשבים כמה הם 20% מתוך 80, ואז מחסירים מהמחיר המקורי.</div>
+          <select id="q14">
+            <option value="">בחר תשובה</option>
+            <option value="60">60 ₪</option>
+            <option value="62">62 ₪</option>
+            <option value="64">64 ₪</option>
+            <option value="68">68 ₪</option>
+          </select>
+        </div>
 
-window.data={score};
-}
+        <div class="question">
+          <p><strong>15.</strong> בספרייה היו 245 ספרים. נקנו עוד 38 ספרים. אחר כך נגרעו 17 ספרים. כמה ספרים יש עכשיו?</p>
+          <select id="q15">
+            <option value="">בחר תשובה</option>
+            <option value="256">256</option>
+            <option value="266">266</option>
+            <option value="276">276</option>
+            <option value="286">286</option>
+          </select>
+        </div>
 
-function openTeacher(){
-if(document.getElementById("pass").value!="0101") return;
+        <div class="question">
+          <p><strong>16.</strong> 5 עפרונות עולים 15 ₪. כמה יעלו 8 עפרונות, אם המחיר לעיפרון נשאר קבוע?</p>
+          <select id="q16">
+            <option value="">בחר תשובה</option>
+            <option value="21">21 ₪</option>
+            <option value="24">24 ₪</option>
+            <option value="27">27 ₪</option>
+            <option value="30">30 ₪</option>
+          </select>
+        </div>
 
-document.getElementById("analysis").innerHTML=
-"ניתוח: רמת ידע בסיסית בהתאם לציון "+window.data.score;
-}
+        <div class="btn-row">
+          <button type="button" class="secondary" onclick="prevSection()">חזרה</button>
+          <button type="button" onclick="nextSection()">הבא</button>
+        </div>
+      </div>
 
-</script>
+      <!-- תחום 4 -->
+      <div class="section">
+        <div class="progress">תחום 4 מתוך 6 • גאומטריה ומדידה</div>
+        <h2>גאומטריה ומדידה</h2>
 
+        <div class="question">
+          <p><strong>17.</strong> מהו ההיקף של מלבן שאורכו 8 ס״מ ורוחבו 5 ס״מ?</p>
+          <select id="q17">
+            <option value="">בחר תשובה</option>
+            <option value="13">13 ס״מ</option>
+            <option value="26">26 ס״מ</option>
+            <option value="40">40 ס״מ</option>
+            <option value="45">45 ס״מ</option>
+          </select>
+        </div>
+
+        <div class="question">
+          <p><strong>18.</strong> מהו השטח של מלבן שאורכו 9 ס״מ ורוחבו 4 ס״מ?</p>
+          <select id="q18">
+            <option value="">בחר תשובה</option>
+            <option value="13">13 סמ״ר</option>
+            <option value="26">26 סמ״ר</option>
+            <option value="36">36 סמ״ר</option>
+            <option value="45">45 סמ״ר</option>
+          </select>
+        </div>
+
+        <div class="question">
+          <p><strong>19.</strong> כמה דקות יש ב־4 שעות ו־30 דקות?</p>
+          <select id="q19">
+            <option value="">בחר תשובה</option>
+            <option value="240">240</option>
+            <option value="250">250</option>
+            <option value="270">270</option>
+            <option value="290">290</option>
+          </select>
+        </div>
+
+        <div class="question">
+          <p><strong>20.</strong> למשולש יש 3 צלעות. למרובע יש:</p>
+          <select id="q20">
+            <option value="">בחר תשובה</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </div>
+
+        <div class="question">
+          <p><strong>21.</strong> כמה מטרים יש ב־350 ס״מ?</p>
+          <select id="q21">
+            <option value="">בחר תשובה</option>
+            <option value="0.35">0.35</option>
+            <option value="3.5">3.5</option>
+            <option value="35">35</option>
+            <option value="350">350</option>
+          </select>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="secondary" onclick="prevSection()">חזרה</button>
+          <button type="button" onclick="nextSection()">הבא</button>
+        </div>
+      </div>
+
+      <!-- תחום 5 -->
+      <div class="section">
+        <div class="progress">תחום 5 מתוך 6 • חשיבה מתמטית והבנה</div>
+        <h2>חשיבה מתמטית והבנה</h2>
+
+        <div class="question">
+          <p><strong>22.</strong> כתוב שני מספרים שונים שסכומם 100.</p>
+          <div class="subgrid">
+            <div>
+              <label for="q22a">מספר ראשון</label>
+              <input type="number" id="q22a" />
+            </div>
+            <div>
+              <label for="q22b">מספר שני</label>
+              <input type="number" id="q22b" />
+            </div>
+          </div>
+          <label for="q22c">איך בדקת שהתשובה נכונה?</label>
+          <textarea id="q22c"></textarea>
+          <div class="example">דוגמה לתשובה מלאה: 40 ו־60. בדקתי על ידי חיבור: 40 + 60 = 100. כל זוג אחר שנכון מתקבל.</div>
+        </div>
+
+        <div class="question">
+          <p><strong>23.</strong> הסבר מדוע <span class="ltr-math">25 × 4</span> שווה ל־<span class="ltr-math">50 × 2</span>.</p>
+          <textarea id="q23"></textarea>
+          <div class="example">דוגמה: בשני התרגילים מתקבלת אותה תוצאה, 100.</div>
+        </div>
+
+        <div class="question">
+          <p><strong>24.</strong> מה קורה לערך של מספר כאשר מחלקים אותו ב־1,000? הסבר במילים או בדוגמה.</p>
+          <textarea id="q24"></textarea>
+          <div class="example">דוגמה: 5,000 ÷ 1,000 = 5. כלומר המספר קטן מאוד.</div>
+        </div>
+
+        <div class="question">
+          <p><strong>25.</strong> תלמיד אמר: “אם מוסיפים 9 ואז מחסירים 9, חוזרים לאותו מספר”. האם הוא צודק? הסבר.</p>
+          <textarea id="q25"></textarea>
+          <div class="example">דוגמה: אם מתחילים ב־30, מוסיפים 9 מקבלים 39, ואז מחסירים 9 וחוזרים ל־30.</div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="secondary" onclick="prevSection()">חזרה</button>
+          <button type="button" onclick="nextSection()">הבא</button>
+        </div>
+      </div>
+
+      <!-- תחום 6 -->
+      <div class="section">
+        <div class="progress">תחום 6 מתוך 6 • אוריינות מתמטית</div>
+        <h2>אוריינות מתמטית</h2>
+
+        <div class="question">
+          <p><strong>26.</strong> בקבוק מים מכיל 1.5 ליטר. כמה ליטר יש ב־6 בקבוקים?</p>
+          <select id="q26">
+            <option value="">בחר תשובה</option>
+            <option value="7.5">7.5</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="9.5">9.5</option>
+          </select>
+        </div>
+
+        <div class="question">
+          <p><strong>27.</strong> אוטובוס יצא בשעה 14:35 והגיע לאחר שעה ו־50 דקות. באיזו שעה הגיע?</p>
+          <select id="q27">
+            <option value="">בחר תשובה</option>
+            <option value="16:15">16:15</option>
+            <option value="16:25">16:25</option>
+            <option value="15:25">15:25</option>
+            <option value="16:35">16:35</option>
+          </select>
+        </div>
+
+        <div class="question">
+          <p><strong>28.</strong> במבצע נמכרים 3 מחברות ב־18 ₪. כמה יעלו 7 מחברות אם המחיר למחברת נשאר קבוע?</p>
+          <select id="q28">
+            <option value="">בחר תשובה</option>
+            <option value="36">36 ₪</option>
+            <option value="40">40 ₪</option>
+            <option value="42">42 ₪</option>
+            <option value="48">48 ₪</option>
+          </select>
+        </div>
+
+        <div class="question">
+          <p><strong>29.</strong> טיול כיתתי מתחיל ב־08:20 ונמשך 4 שעות ו־35 דקות. מתי הוא מסתיים?</p>
+          <select id="q29">
+            <option value="">בחר תשובה</option>
+            <option value="12:45">12:45</option>
+            <option value="12:55">12:55</option>
+            <option value="13:05">13:05</option>
+            <option value="13:15">13:15</option>
+          </select>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="secondary" onclick="prevSection()">חזרה</button>
+          <button type="button" class="ghost" onclick="calculateResults()">סיום וקבלת ציון</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="studentResult" class="result-box hidden"></div>
+
+    <div id="teacherAccess" class="teacher-box hidden">
+      <h3>כניסת מורה</h3>
+      <p>הזן קוד גישה כדי לצפות בניתוח המלא.</p>
+      <input type="password" id="analysisPassword" placeholder="הזן קוד גישה" />
+      <div class="btn-row">
+        <button type="button" onclick="unlockAnalysis()">פתח ניתוח</button>
+      </div>
+      <div id="passwordMessage"></div>
+      <div id="teacherAnalysis" class="hidden"></div>
+    </div>
+  </div>
+
+  <script>
+    let currentSection = 0;
+    const sections = document.querySelectorAll(".section");
+
+    function nextSection() {
+      if (currentSection < sections.length - 1) {
+        sections[currentSection].classList.remove("active");
+        currentSection++;
+        sections[currentSection].classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function prevSection() {
+      if (currentSection > 0) {
+        sections[currentSection].classList.remove("active");
+        currentSection--;
+        sections[currentSection].classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function normalizeText(text) {
+      return String(text || '').trim().replace(/\s+/g, ' ').toLowerCase();
+    }
+
+    function scoreQ22(a, b, expl) {
+      const n1 = Number(a);
+      const n2 = Number(b);
+      const text = normalizeText(expl);
+      let score = 0;
+      if (!Number.isNaN(n1) && !Number.isNaN(n2) && n1 !== n2 && (n1 + n2 === 100)) score += 1;
+      const hasCheck = text.includes('100') || text.includes('+') || text.includes('חיבור') || text.includes('בדק') || text.includes('שווה');
+      if (hasCheck) score += 1;
+      return score;
+    }
+
+    function scoreQ23(answer) {
+      const text = normalizeText(answer);
+      if (!text) return 0;
+      const mentions100 = text.includes('100');
+      const mentionsSame = text.includes('אותה') || text.includes('שווה') || text.includes('מכפלה') || text.includes('תוצאה');
+      const mentionsRelation = text.includes('חצי') || text.includes('פי 2') || text.includes('כפול');
+      if ((mentions100 && mentionsSame) || (mentionsSame && mentionsRelation)) return 2;
+      if (mentions100 || mentionsSame || mentionsRelation) return 1;
+      return 0;
+    }
+
+    function scoreQ24(answer) {
+      const text = normalizeText(answer);
+      if (!text) return 0;
+      const ideas = ['קטן', 'פי 1000', 'שלושה', 'מקומות', '5000', '5,000', 'יורד'];
+      let hits = 0;
+      ideas.forEach(word => { if (text.includes(word)) hits++; });
+      if (hits >= 2) return 2;
+      if (hits >= 1) return 1;
+      return 0;
+    }
+
+    function scoreQ25(answer) {
+      const text = normalizeText(answer);
+      if (!text) return 0;
+      const saysYes = text.includes('כן') || text.includes('צודק') || text.includes('חוזר') || text.includes('אותו');
+      const hasReason = text.includes('כי') || text.includes('דוגמה') || text.includes('30') || text.includes('39');
+      if (saysYes && hasReason) return 2;
+      if (saysYes || hasReason) return 1;
+      return 0;
+    }
+
+    function getPerformanceLabel(percent) {
+      if (percent >= 85) return 'שליטה מלאה';
+      if (percent >= 60) return 'שליטה חלקית';
+      return 'נדרש חיזוק משמעותי';
+    }
+
+    function getPerformanceMeaning(domainName, percent) {
+      if (percent >= 85) return 'התלמיד מפגין שליטה טובה מאוד בתחום ' + domainName + ', מבצע את המשימות בדיוק גבוה ומראה בסיס יציב להמשך למידה.';
+      if (percent >= 60) return 'התלמיד מפגין שליטה חלקית בתחום ' + domainName + '. קיימת הבנה בסיסית, אך נדרשים עוד תרגול, ביסוס והעמקה.';
+      return 'התלמיד מתקשה בתחום ' + domainName + '. מומלץ תהליך ממוקד של הוראה מותאמת, תרגול מדורג וביסוס מושגים.';
+    }
+
+    function getThinkingMeaning(score, maxScore) {
+      const percent = Math.round((score / maxScore) * 100);
+      if (percent >= 80) return 'ניכרת חשיבה מתמטית טובה: יכולת להסביר, לנמק, לבדוק תשובה ולקשר בין פעולות.';
+      if (percent >= 50) return 'ניכרת חשיבה מתמטית ברמה בינונית: יש הבנה חלקית, אך ההסברים קצרים או לא מדויקים דיים.';
+      return 'ניכר קושי בהסבר, בנימוק ובחשיבה מתמטית. מומלץ לשלב שיח מתמטי, דוגמאות ומשימות הסבר מודרכות.';
+    }
+
+    function getFinalMeaning(percent) {
+      if (percent >= 85) return 'התמונה הכוללת מצביעה על שליטה גבוהה מאוד ברוב התחומים שנבדקו.';
+      if (percent >= 70) return 'התמונה הכוללת חיובית. יש בסיס טוב, אך נדרשת העמקה במספר תחומים.';
+      if (percent >= 50) return 'התמונה הכוללת מצביעה על שליטה חלקית. קיימים פערים משמעותיים המחייבים התערבות ממוקדת.';
+      return 'התמונה הכוללת מצביעה על צורך בחיזוק יסודי ובהתאמה אישית של תהליך הלמידה.';
+    }
+
+    function inferErrorType(domainKey, percent) {
+      if (percent >= 85) return 'אין אינדיקציה לפער מהותי בתחום זה.';
+      if (domainKey === 'numbers') return 'סביר שיש קושי בדיוק חישובי, בערך ספרה או בשליטה בפעולות בסיסיות.';
+      if (domainKey === 'fractions') return 'סביר שיש קושי מושגי בשברים: השוואה, חיבור או הבנת חלק־שלם.';
+      if (domainKey === 'wordProblems') return 'סביר שיש קושי בתרגום טקסט לפעולה חשבונית ובפתרון רב־שלבי.';
+      if (domainKey === 'geometry') return 'סביר שיש קושי בהבחנה בין שטח להיקף, בהמרות יחידות או במדידה.';
+      if (domainKey === 'thinking') return 'סביר שיש קושי בהסבר, בנימוק, בבדיקת תשובה ובהמשגה מתמטית.';
+      if (domainKey === 'literacy') return 'סביר שיש קושי ביישום מתמטיקה בהקשרים יומיומיים של זמן, כסף ויחסים.';
+      return 'קושי כללי.';
+    }
+
+    function inferKnowledge(numbersPercent, fractionsPercent) {
+      const avg = Math.round((numbersPercent + fractionsPercent) / 2);
+      if (avg >= 85) return 'רמת הידע החישובי גבוהה. התלמיד שולט היטב במספרים, פעולות ושברים בסיסיים.';
+      if (avg >= 60) return 'קיים בסיס חישובי סביר, אך נדרש חיזוק עקבי בדיוק ובשליטה בשברים.';
+      return 'רמת הידע החישובי נמוכה יחסית. מומלץ לחזור באופן שיטתי על ערך ספרה, פעולות חשבון ושברים.';
+    }
+
+    function inferApplication(wordPercent, litPercent) {
+      const avg = Math.round((wordPercent + litPercent) / 2);
+      if (avg >= 85) return 'התלמיד מיישם מתמטיקה היטב במצבים יומיומיים ובבעיות מילוליות.';
+      if (avg >= 60) return 'יש יכולת יישום חלקית, אך נדרשת עבודה על תרגום סיטואציה מילולית לפעולה חשבונית.';
+      return 'ניכר קושי ביישום מתמטיקה בסיטואציות מציאותיות. מומלץ לתרגל בעיות קצרות ומדורגות.';
+    }
+
+    function inferThinking(thinkingPercent) {
+      if (thinkingPercent >= 85) return 'ניכרת יכולת הסבר, הנמקה ובדיקת תשובה ברמה טובה מאוד.';
+      if (thinkingPercent >= 60) return 'יש התחלה של חשיבה מנומקת, אך ההסברים עדיין חלקיים או טכניים מדי.';
+      return 'נדרש חיזוק משמעותי בשיח מתמטי, בנימוק וביכולת להסביר מדוע תשובה נכונה.';
+    }
+
+    function inferGeometry(geometryPercent) {
+      if (geometryPercent >= 85) return 'שליטה טובה בהיקף, שטח, יחידות מידה ומבנים גאומטריים בסיסיים.';
+      if (geometryPercent >= 60) return 'קיימת הבנה חלקית בתחום המדידה והגאומטריה, אך נדרשים ביסוס ודיוק.';
+      return 'נדרשת הוראה מתקנת בתחום מדידה, המרות יחידות והבחנה בין שטח להיקף.';
+    }
+
+    function buildRecommendation(data) {
+      const weak = data.needsSupport;
+      if (!weak.length) return 'מומלץ להעשיר ולהעמיק: משימות אתגר, שאלות הסבר, חקר דפוסים ופתרון בעיות מרובות שלבים.';
+      if (weak.includes('חשיבה מתמטית והבנה')) return 'מומלץ לשלב תרגול מונחה של הסבר בכתב, שיח מתמטי, דוגמאות נגדיות ושאלות "למה?".';
+      if (weak.includes('בעיות מילוליות') || weak.includes('אוריינות מתמטית')) return 'מומלץ לתרגל המרה של טקסט לפעולה: סימון נתונים, בחירת פעולה, בדיקת סבירות התוצאה.';
+      if (weak.includes('שברים')) return 'מומלץ לחזק הבנה מושגית של שברים באמצעות ייצוגים חזותיים, השוואות וחיבור שברים פשוטים.';
+      if (weak.includes('מספרים ופעולות')) return 'מומלץ לבסס שוב ערך ספרה, עובדות כפל, חילוק ותהליכי חישוב מדורגים.';
+      return 'מומלץ לבנות תכנית תרגול קצרה, עקבית ומדורגת, המתמקדת תחילה בתחומים החלשים ורק אחר כך בהעשרה.';
+    }
+
+    function buildResultsPayload() {
+      const answers = {
+        q1: document.getElementById('q1').value,
+        q2: document.getElementById('q2').value,
+        q3: document.getElementById('q3').value,
+        q4: document.getElementById('q4').value,
+        q5: document.getElementById('q5').value,
+        q6: document.getElementById('q6').value,
+        q7: document.getElementById('q7').value,
+        q8: document.getElementById('q8').value,
+        q9: document.getElementById('q9').value,
+        q10: document.getElementById('q10').value,
+        q11: document.getElementById('q11').value,
+        q12: document.getElementById('q12').value,
+        q13: document.getElementById('q13').value,
+        q14: document.getElementById('q14').value,
+        q15: document.getElementById('q15').value,
+        q16: document.getElementById('q16').value,
+        q17: document.getElementById('q17').value,
+        q18: document.getElementById('q18').value,
+        q19: document.getElementById('q19').value,
+        q20: document.getElementById('q20').value,
+        q21: document.getElementById('q21').value,
+        q22a: document.getElementById('q22a').value,
+        q22b: document.getElementById('q22b').value,
+        q22c: document.getElementById('q22c').value,
+        q23: document.getElementById('q23').value,
+        q24: document.getElementById('q24').value,
+        q25: document.getElementById('q25').value,
+        q26: document.getElementById('q26').value,
+        q27: document.getElementById('q27').value,
+        q28: document.getElementById('q28').value,
+        q29: document.getElementById('q29').value
+      };
+
+      const domainScores = {
+        numbers: { score: 0, max: 6, name: 'מספרים ופעולות', curriculum_topic: 'מספרים טבעיים, ערך ספרה ופעולות' },
+        fractions: { score: 0, max: 5, name: 'שברים', curriculum_topic: 'שברים פשוטים, השוואה וחיבור בסיסי' },
+        wordProblems: { score: 0, max: 5, name: 'בעיות מילוליות', curriculum_topic: 'פתרון בעיות מילוליות רב־שלביות' },
+        geometry: { score: 0, max: 5, name: 'גאומטריה ומדידה', curriculum_topic: 'היקף, שטח, יחידות מידה ומבנים' },
+        thinking: { score: 0, max: 8, name: 'חשיבה מתמטית והבנה', curriculum_topic: 'נימוק, בדיקה והסבר מתמטי' },
+        literacy: { score: 0, max: 4, name: 'אוריינות מתמטית', curriculum_topic: 'יישום בהקשרים יומיומיים' }
+      };
+
+      if (answers.q1 === '6146') domainScores.numbers.score++;
+      if (answers.q2 === '5400') domainScores.numbers.score++;
+      if (answers.q3 === '288') domainScores.numbers.score++;
+      if (answers.q4 === '13') domainScores.numbers.score++;
+      if (answers.q5 === '5490') domainScores.numbers.score++;
+      if (answers.q6 === '7000') domainScores.numbers.score++;
+
+      if (answers.q7 === '3/4') domainScores.fractions.score++;
+      if (answers.q8 === '3/4') domainScores.fractions.score++;
+      if (answers.q9 === '5/8') domainScores.fractions.score++;
+      if (answers.q10 === '6/8') domainScores.fractions.score++;
+      if (answers.q11 === '4/5') domainScores.fractions.score++;
+
+      if (answers.q12 === '128') domainScores.wordProblems.score++;
+      if (answers.q13 === '2800') domainScores.wordProblems.score++;
+      if (answers.q14 === '64') domainScores.wordProblems.score++;
+      if (answers.q15 === '266') domainScores.wordProblems.score++;
+      if (answers.q16 === '24') domainScores.wordProblems.score++;
+
+      if (answers.q17 === '26') domainScores.geometry.score++;
+      if (answers.q18 === '36') domainScores.geometry.score++;
+      if (answers.q19 === '270') domainScores.geometry.score++;
+      if (answers.q20 === '4') domainScores.geometry.score++;
+      if (answers.q21 === '3.5') domainScores.geometry.score++;
+
+      domainScores.thinking.score += scoreQ22(answers.q22a, answers.q22b, answers.q22c);
+      domainScores.thinking.score += scoreQ23(answers.q23);
+      domainScores.thinking.score += scoreQ24(answers.q24);
+      domainScores.thinking.score += scoreQ25(answers.q25);
+
+      if (answers.q26 === '9') domainScores.literacy.score++;
+      if (answers.q27 === '16:25') domainScores.literacy.score++;
+      if (answers.q28 === '42') domainScores.literacy.score++;
+      if (answers.q29 === '12:55') domainScores.literacy.score++;
+
+      let totalRaw = 0;
+      let totalMax = 0;
+      let strengths = [];
+      let needsSupport = [];
+
+      Object.keys(domainScores).forEach(key => {
+        const d = domainScores[key];
+        d.percent = Math.round((d.score / d.max) * 100);
+        d.level = getPerformanceLabel(d.percent);
+        d.meaning = key === 'thinking' ? getThinkingMeaning(d.score, d.max) : getPerformanceMeaning(d.name, d.percent);
+        d.difficulty_type = inferErrorType(key, d.percent);
+
+        totalRaw += d.score;
+        totalMax += d.max;
+        if (d.percent >= 85) strengths.push(d.name);
+        if (d.percent < 60) needsSupport.push(d.name);
+      });
+
+      const totalPercent = Math.round((totalRaw / totalMax) * 100);
+
+      const structured = {
+        student: {
+          name: document.getElementById('studentName').value.trim(),
+          className: document.getElementById('studentClass').value.trim()
+        },
+        score: totalPercent,
+        summary: {
+          level: getPerformanceLabel(totalPercent),
+          meaning: getFinalMeaning(totalPercent)
+        },
+        domains: Object.fromEntries(
+          Object.entries(domainScores).map(([k, d]) => [k, {
+            domain_name: d.name,
+            curriculum_topic: d.curriculum_topic,
+            raw_score: d.score,
+            max_score: d.max,
+            percent: d.percent,
+            mastery_level: d.level,
+            difficulty_type: d.difficulty_type,
+            teacher_meaning: d.meaning
+          }])
+        ),
+        strengths,
+        needs_support: needsSupport,
+        pedagogical_flags: {
+          computational_knowledge: inferKnowledge(domainScores.numbers.percent, domainScores.fractions.percent),
+          application_and_problem_solving: inferApplication(domainScores.wordProblems.percent, domainScores.literacy.percent),
+          mathematical_reasoning: inferThinking(domainScores.thinking.percent),
+          geometry_and_measurement: inferGeometry(domainScores.geometry.percent)
+        },
+        next_step_recommendation: buildRecommendation({ needsSupport })
+      };
+
+      return {
+        student: {
+          name: document.getElementById('studentName').value.trim(),
+          className: document.getElementById('studentClass').value.trim()
+        },
+        answers,
+        domainScores,
+        strengths,
+        needsSupport,
+        total: {
+          raw: totalRaw,
+          max: totalMax,
+          percent: totalPercent,
+          level: getPerformanceLabel(totalPercent),
+          meaning: getFinalMeaning(totalPercent)
+        },
+        structured
+      };
+    }
+
+    function calculateResults() {
+      const data = buildResultsPayload();
+      document.getElementById('quizForm').classList.add('hidden');
+
+      const studentResult = document.getElementById('studentResult');
+      studentResult.innerHTML = `
+        <div class="score-big">${data.total.percent}</div>
+        <p class="score-sub">הציון הסופי</p>
+      `;
+      studentResult.classList.remove('hidden');
+
+      document.getElementById('teacherAccess').classList.remove('hidden');
+      window.fullAnalysisData = data;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function copyStructuredData() {
+      const area = document.getElementById('structuredDataArea');
+      if (!area) return;
+      area.select();
+      area.setSelectionRange(0, 999999);
+      navigator.clipboard.writeText(area.value).then(() => {
+        const msg = document.getElementById('copyMsg');
+        msg.innerHTML = '<p class="status-ok">נתוני האבחון הועתקו.</p>';
+      }).catch(() => {
+        const msg = document.getElementById('copyMsg');
+        msg.innerHTML = '<p class="status-warn">לא ניתן היה להעתיק אוטומטית. אפשר להעתיק ידנית מתוך החלון.</p>';
+      });
+    }
+
+    function unlockAnalysis() {
+      const password = document.getElementById('analysisPassword').value;
+      const passwordMessage = document.getElementById('passwordMessage');
+      const teacherAnalysis = document.getElementById('teacherAnalysis');
+
+      if (password !== '0101') {
+        passwordMessage.innerHTML = '<p class="status-bad">קוד גישה שגוי.</p>';
+        teacherAnalysis.classList.add('hidden');
+        return;
+      }
+
+      const data = window.fullAnalysisData;
+      if (!data) return;
+
+      passwordMessage.innerHTML = '<p class="status-ok">הגישה אושרה.</p>';
+
+      teacherAnalysis.innerHTML = `
+        <div class="result-box" style="background:#fff;">
+          <h3>ניתוח מפורט למורה</h3>
+          <p><strong>שם התלמיד:</strong> ${escapeHtml(data.student.name || 'לא הוזן')}</p>
+          <p><strong>כיתה:</strong> ${escapeHtml(data.student.className || 'לא הוזנה')}</p>
+          <p><strong>ציון סופי:</strong> ${data.total.percent} <span class="pill">${escapeHtml(data.total.level)}</span></p>
+          <p><strong>משמעות כללית:</strong> ${escapeHtml(data.total.meaning)}</p>
+
+          <h3>חוזקות בולטות</h3>
+          <p>${data.strengths.length ? escapeHtml(data.strengths.join(', ')) : 'לא זוהו תחומי חוזקה בולטים ברמת שליטה מלאה.'}</p>
+
+          <h3>תחומים המחייבים חיזוק</h3>
+          <p>${data.needsSupport.length ? escapeHtml(data.needsSupport.join(', ')) : 'לא זוהו תחומים המחייבים חיזוק משמעותי.'}</p>
+
+          <h3>פירוט לפי תחומים</h3>
+          ${Object.entries(data.domainScores).map(([key, d]) => `
+            <div class="domain-card">
+              <strong>${escapeHtml(d.name)}</strong><br>
+              <strong>נושא לימודי:</strong> ${escapeHtml(d.curriculum_topic)}<br>
+              <strong>ציון תחומי:</strong> ${d.percent}%<br>
+              <strong>רמת שליטה:</strong> ${escapeHtml(d.level)}<br>
+              <strong>אופי הקושי/הביצוע:</strong> ${escapeHtml(d.difficulty_type)}<br>
+              <strong>פירוש למורה:</strong> ${escapeHtml(d.meaning)}
+            </div>
+          `).join('')}
+
+          <h3>פענוח פדגוגי כללי</h3>
+          <ul>
+            <li><strong>ידע חישובי:</strong> ${escapeHtml(inferKnowledge(data.domainScores.numbers.percent, data.domainScores.fractions.percent))}</li>
+            <li><strong>פתרון בעיות ויישום:</strong> ${escapeHtml(inferApplication(data.domainScores.wordProblems.percent, data.domainScores.literacy.percent))}</li>
+            <li><strong>חשיבה והנמקה:</strong> ${escapeHtml(inferThinking(data.domainScores.thinking.percent))}</li>
+            <li><strong>מדידה ומבנים:</strong> ${escapeHtml(inferGeometry(data.domainScores.geometry.percent))}</li>
+          </ul>
+
+          <h3>תשובות פתוחות</h3>
+          <ul>
+            <li><strong>שאלה 22 – מספר ראשון:</strong> ${escapeHtml(data.answers.q22a || 'לא ניתנה תשובה')}</li>
+            <li><strong>שאלה 22 – מספר שני:</strong> ${escapeHtml(data.answers.q22b || 'לא ניתנה תשובה')}</li>
+            <li><strong>שאלה 22 – דרך בדיקה:</strong> ${escapeHtml(data.answers.q22c || 'לא ניתנה תשובה')}</li>
+            <li><strong>שאלה 23:</strong> ${escapeHtml(data.answers.q23 || 'לא ניתנה תשובה')}</li>
+            <li><strong>שאלה 24:</strong> ${escapeHtml(data.answers.q24 || 'לא ניתנה תשובה')}</li>
+            <li><strong>שאלה 25:</strong> ${escapeHtml(data.answers.q25 || 'לא ניתנה תשובה')}</li>
+          </ul>
+
+          <h3>המלצה להמשך</h3>
+          <p>${escapeHtml(buildRecommendation(data))}</p>
+
+          <h3>ממשק לשלב הבא – נתוני אבחון מובנים</h3>
+          <p class="note">הבלוק הבא נבנה במיוחד כדי שבשלב הבא יהיה אפשר להזין אותו לקוד שיפיק תכנית למידה מותאמת: דפי עבודה, מבחנים קצרים, חידונים, מערכי שיעור והתאמות נוספות.</p>
+
+          <div class="small-title">נתוני אבחון להעתקה</div>
+          <textarea id="structuredDataArea" class="json-area" readonly>${escapeHtml(JSON.stringify(data.structured, null, 2))}</textarea>
+
+          <div class="btn-row">
+            <button type="button" class="copybtn" onclick="copyStructuredData()">העתק נתוני אבחון</button>
+          </div>
+          <div id="copyMsg"></div>
+        </div>
+      `;
+      teacherAnalysis.classList.remove('hidden');
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+  </script>
 </body>
 </html>
