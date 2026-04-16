@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>מבחן דיאגנוסטי מתמטיקה כיתה ה׳</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{font-family:Arial;background:#f5f7fa;margin:0}
+.container{max-width:900px;margin:20px auto;background:#fff;padding:20px;border-radius:12px}
+.section{display:none}
+.section.active{display:block}
+.question{margin-bottom:15px;padding:12px;background:#f9fafb;border-radius:8px}
+button{padding:10px;border:none;border-radius:8px;background:#2563eb;color:#fff;cursor:pointer}
+.hidden{display:none}
+.ltr{direction:ltr}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>מבחן דיאגנוסטי במתמטיקה</h1>
+
+<form id="quiz">
+
+<div class="section active">
+<h2>הוראות</h2>
+<p>ענה על כל השאלות. בסיום יוצג רק הציון.</p>
+<button type="button" onclick="next()">התחל</button>
+</div>
+
+<div class="section">
+<h2>מספרים ופעולות</h2>
+
+<div class="question">1. <span class="ltr">3487+2659</span>
+<input id="q1"></div>
+
+<div class="question">2. <span class="ltr">9685-4285</span>
+<input id="q2"></div>
+
+<button type="button" onclick="next()">המשך</button>
+</div>
+
+<div class="section">
+<h2>חשיבה</h2>
+
+<div class="question">
+כתוב שני מספרים שסכומם 100 והסבר
+<textarea id="q3"></textarea>
+</div>
+
+<button type="button" onclick="finish()">סיום</button>
+</div>
+
+</form>
+
+<div id="result" class="hidden"></div>
+
+<div id="teacher" class="hidden">
+<input id="pass" placeholder="קוד">
+<button onclick="openTeacher()">כניסה</button>
+<div id="analysis"></div>
+</div>
+
+</div>
+
+<script>
+
+let i=0;
+let sections=document.querySelectorAll(".section");
+
+function next(){
+sections[i].classList.remove("active");
+i++;
+sections[i].classList.add("active");
+}
+
+function finish(){
+let score=0;
+
+if(document.getElementById("q1").value==6146) score++;
+if(document.getElementById("q2").value==5400) score++;
+
+document.getElementById("quiz").classList.add("hidden");
+
+document.getElementById("result").innerHTML="ציון: "+score+"/2";
+document.getElementById("result").classList.remove("hidden");
+
+document.getElementById("teacher").classList.remove("hidden");
+
+window.data={score};
+}
+
+function openTeacher(){
+if(document.getElementById("pass").value!="0101") return;
+
+document.getElementById("analysis").innerHTML=
+"ניתוח: רמת ידע בסיסית בהתאם לציון "+window.data.score;
+}
+
+</script>
+
+</body>
+</html>
