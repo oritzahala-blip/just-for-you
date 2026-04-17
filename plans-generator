@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>מחולל תכנית לימודים מותאמת – מתמטיקה כיתה ה׳</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --line:#d8e0eb;
+      --text:#1f2937;
+      --muted:#667085;
+      --primary:#155eef;
+      --primary2:#194185;
+      --secondary:#667085;
+      --success:#067647;
+      --warning:#b54708;
+      --danger:#b42318;
+      --soft:#f8fbff;
+      --warm:#fff8ef;
+      --warm2:#fdebd2;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .container{
+      max-width:1120px;
+      margin:24px auto;
+      padding:28px;
+      background:var(--card);
+      border-radius:20px;
+      box-shadow:0 8px 24px rgba(0,0,0,.08);
+    }
+    h1,h2,h3,h4{margin-top:0;line-height:1.35}
+    p,li{line-height:1.7}
+    .lead{color:var(--muted)}
+    .hidden{display:none}
+    .screen{display:none}
+    .screen.active{display:block}
+    .card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:18px;
+    }
+    .soft-card{
+      background:var(--soft);
+      border:1px solid #dbeafe;
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:18px;
+    }
+    .warm-card{
+      background:var(--warm);
+      border:1px solid var(--warm2);
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:18px;
+    }
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+    .grid-3{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:16px;
+    }
+    @media (max-width: 860px){
+      .grid-2,.grid-3{grid-template-columns:1fr}
+      .btn-row{flex-direction:column}
+      button{width:100%}
+    }
+    label{
+      display:block;
+      font-weight:bold;
+      margin-top:8px;
+      margin-bottom:6px;
+    }
+    input[type="text"],
+    input[type="date"],
+    input[type="password"],
+    select,
+    textarea{
+      width:100%;
+      padding:11px 12px;
+      border:1px solid #cbd5e1;
+      border-radius:10px;
+      font-size:16px;
+      background:#fff;
+      color:#111827;
+    }
+    textarea{min-height:120px;resize:vertical}
+    .btn-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+    button{
+      border:none;
+      border-radius:10px;
+      padding:12px 18px;
+      font-size:16px;
+      cursor:pointer;
+      background:var(--primary);
+      color:white;
+    }
+    button.secondary{background:var(--secondary)}
+    button.copy{background:var(--primary2)}
+    .note{
+      font-size:14px;
+      color:var(--muted);
+      margin-top:8px;
+    }
+    .status-ok{color:var(--success);font-weight:bold}
+    .status-bad{color:var(--danger);font-weight:bold}
+    .pill{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:13px;
+      background:#eef4ff;
+      color:#194185;
+      margin-inline-start:6px;
+    }
+    .hero-wrap{
+      overflow:hidden;
+      border-radius:20px;
+      background:linear-gradient(135deg,#fff6ea 0%,#f9f4ff 50%,#eef7ff 100%);
+      border:1px solid #eadcc7;
+      padding:24px;
+      position:relative;
+    }
+    .hero-title{
+      text-align:center;
+      margin-bottom:18px;
+    }
+    .hero-sub{
+      text-align:center;
+      color:var(--muted);
+      margin-bottom:22px;
+    }
+    .scene{
+      width:100%;
+      max-width:860px;
+      margin:0 auto;
+      display:block;
+    }
+    .fadein{
+      animation:fadein 0.8s ease;
+    }
+    @keyframes fadein{
+      from{opacity:0;transform:translateY(8px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    .float1{animation:floaty 5s ease-in-out infinite}
+    .float2{animation:floaty 6s ease-in-out infinite}
+    .float3{animation:floaty 4.8s ease-in-out infinite}
+    @keyframes floaty{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-8px)}
+    }
+    .program-header{
+      border-bottom:1px solid var(--line);
+      padding-bottom:12px;
+      margin-bottom:18px;
+    }
+    .index-list{
+      margin:0;
+      padding-right:20px;
+    }
+    details{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      padding:12px 14px;
+      margin-bottom:14px;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:bold;
+      line-height:1.6;
+    }
+    .resource-type{
+      font-size:13px;
+      color:#194185;
+      background:#eef4ff;
+      padding:4px 10px;
+      border-radius:999px;
+      display:inline-block;
+      margin-bottom:8px;
+    }
+    .mini-title{
+      font-size:15px;
+      font-weight:bold;
+      margin-top:10px;
+      margin-bottom:6px;
+    }
+    .exercise-box{
+      background:#fafbfd;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      padding:12px;
+      margin-top:10px;
+    }
+    .hint-btn, .answer-btn{
+      margin-top:10px;
+      padding:8px 12px;
+      font-size:14px;
+    }
+    .hint-btn{background:#b54708}
+    .answer-btn{background:#067647}
+    .feedback{
+      margin-top:8px;
+      padding:10px 12px;
+      border-radius:10px;
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+    }
+    .json-area{
+      width:100%;
+      min-height:240px;
+      font-family:monospace;
+      direction:ltr;
+      text-align:left;
+      white-space:pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- מסך סיסמה -->
+    <div id="screen-auth" class="screen active fadein">
+      <h1>מחולל תכנית לימודים מותאמת</h1>
+      <p class="lead">הכניסה למחולל מאובטחת בסיסמה.</p>
+
+      <div class="card">
+        <label for="accessPass">הזן סיסמה</label>
+        <input type="password" id="accessPass" placeholder="הזן סיסמה" />
+        <div class="btn-row">
+          <button type="button" onclick="checkAccess()">כניסה</button>
+        </div>
+        <div id="accessMsg"></div>
+      </div>
+    </div>
+
+    <!-- שער -->
+    <div id="screen-hero" class="screen fadein">
+      <div class="hero-wrap">
+        <h1 class="hero-title">מחולל תכנית לימודים מותאמת אישית</h1>
+        <p class="hero-sub">תכנון מותאם לתלמיד – מתוך אבחון, רגישות, דיוק פדגוגי והבנה שהלמידה היא קודם כל עבודה עם בני אדם.</p>
+
+        <svg class="scene" viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" aria-label="איור של תלמיד ומורה לומדים מתמטיקה באווירה חמימה">
+          <defs>
+            <linearGradient id="bg1" x1="0" x2="1">
+              <stop offset="0%" stop-color="#fff0d8"/>
+              <stop offset="100%" stop-color="#f2ecff"/>
+            </linearGradient>
+            <linearGradient id="wood" x1="0" x2="1">
+              <stop offset="0%" stop-color="#a86d3b"/>
+              <stop offset="100%" stop-color="#8c572b"/>
+            </linearGradient>
+          </defs>
+
+          <rect x="0" y="0" width="900" height="520" rx="24" fill="url(#bg1)"/>
+          <circle class="float1" cx="110" cy="90" r="28" fill="#ffe3b3" opacity="0.7"/>
+          <circle class="float2" cx="760" cy="110" r="34" fill="#d8edff" opacity="0.7"/>
+          <circle class="float3" cx="690" cy="70" r="18" fill="#ffd8d8" opacity="0.7"/>
+
+          <rect x="290" y="40" width="320" height="56" rx="12" fill="#fff" stroke="#d9c8ad" stroke-width="2"/>
+          <text x="450" y="75" font-size="26" text-anchor="middle" fill="#5b4a00" font-weight="bold">״לא מלמדים חומר! - מלמדים בני אדם!״</text>
+
+          <rect x="190" y="270" width="520" height="28" rx="8" fill="url(#wood)"/>
+          <rect x="220" y="296" width="24" height="100" fill="#8c572b"/>
+          <rect x="655" y="296" width="24" height="100" fill="#8c572b"/>
+
+          <!-- ילד -->
+          <circle cx="330" cy="205" r="42" fill="#ffd8bd"/>
+          <path d="M292 198 C300 150, 360 145, 372 192" fill="#5b3a2d"/>
+          <circle cx="317" cy="208" r="4" fill="#1f2937"/>
+          <circle cx="343" cy="208" r="4" fill="#1f2937"/>
+          <path d="M320 224 Q330 232 340 224" stroke="#b55b4a" stroke-width="3" fill="none"/>
+          <rect x="286" y="248" width="92" height="68" rx="18" fill="#5da9e9"/>
+          <rect x="307" y="314" width="22" height="68" rx="10" fill="#395068"/>
+          <rect x="338" y="314" width="22" height="68" rx="10" fill="#395068"/>
+          <rect x="278" y="265" width="20" height="65" rx="10" fill="#ffd8bd"/>
+          <rect x="364" y="265" width="20" height="60" rx="10" fill="#ffd8bd"/>
+
+          <!-- מורה -->
+          <circle cx="575" cy="190" r="46" fill="#ffd8bd"/>
+          <path d="M536 185 C540 130, 610 128, 620 190" fill="#4b5563"/>
+          <circle cx="560" cy="193" r="4" fill="#1f2937"/>
+          <circle cx="588" cy="193" r="4" fill="#1f2937"/>
+          <path d="M560 210 Q575 220 590 210" stroke="#b55b4a" stroke-width="3" fill="none"/>
+          <rect x="525" y="235" width="100" height="95" rx="20" fill="#f4b183"/>
+          <rect x="537" y="326" width="24" height="76" rx="10" fill="#6b7280"/>
+          <rect x="585" y="326" width="24" height="76" rx="10" fill="#6b7280"/>
+          <rect x="511" y="260" width="22" height="72" rx="10" fill="#ffd8bd"/>
+          <rect x="619" y="258" width="22" height="68" rx="10" fill="#ffd8bd"/>
+
+          <!-- מחברת ולוח קטן -->
+          <rect x="395" y="230" width="96" height="60" rx="8" fill="#fff" stroke="#cbd5e1"/>
+          <line x1="443" y1="230" x2="443" y2="290" stroke="#cbd5e1"/>
+          <text x="420" y="258" font-size="16" fill="#194185">3/4</text>
+          <text x="458" y="258" font-size="16" fill="#194185">×</text>
+          <text x="475" y="258" font-size="16" fill="#194185">48</text>
+          <text x="452" y="278" font-size="14" fill="#067647">🙂</text>
+
+          <rect x="150" y="130" width="90" height="65" rx="10" fill="#fff" stroke="#cbd5e1"/>
+          <text x="195" y="158" text-anchor="middle" font-size="20" fill="#194185">9 × 6</text>
+          <text x="195" y="182" text-anchor="middle" font-size="18" fill="#067647">= 54</text>
+
+          <rect x="685" y="165" width="100" height="72" rx="10" fill="#fff" stroke="#cbd5e1"/>
+          <text x="735" y="194" text-anchor="middle" font-size="18" fill="#194185">הצלחתי!</text>
+          <text x="735" y="218" text-anchor="middle" font-size="24" fill="#067647">★</text>
+        </svg>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" onclick="goTo('screen-details')">המשך</button>
+      </div>
+    </div>
+
+    <!-- עמוד פרטים -->
+    <div id="screen-details" class="screen fadein">
+      <h2>פרטי התלמיד ונתוני הקלט</h2>
+      <p class="lead">מלא את הפרטים הנדרשים, הדבק את נתוני האבחון משלב 1, ובחר את מסגרת הזמן לתכנית.</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <label for="teacherName">שם המורה <span style="color:#b42318">*</span></label>
+          <input type="text" id="teacherName" placeholder="שם המורה" />
+
+          <label for="studentName2">שם התלמיד <span style="color:#b42318">*</span></label>
+          <input type="text" id="studentName2" placeholder="שם התלמיד" />
+
+          <label for="homeClass">כיתת האם של התלמיד</label>
+          <input type="text" id="homeClass" placeholder="לדוגמה: ה׳2" />
+
+          <label for="planDate">תאריך יצירת התכנית</label>
+          <input type="date" id="planDate" />
+        </div>
+
+        <div class="card">
+          <label for="timeframe">משך התכנית</label>
+          <select id="timeframe">
+            <option value="short">תכנית לפרק זמן קצר (יום עד שלושה ימים)</option>
+            <option value="week">תכנית רחבה לשבוע</option>
+          </select>
+
+          <label for="studentNotes">פרטים נוספים על התלמיד (אופציונלי)</label>
+          <textarea id="studentNotes" placeholder="לדוגמה: קושי בריכוז, ביטחון נמוך במתמטיקה, צורך בתיווך שפתי, העדפה לתרגול חזותי, קצב עבודה איטי, צורך בחוויית הצלחה מהירה וכדומה."></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <label for="diagnosticInput">נתוני האבחון משלב 1 <span style="color:#b42318">*</span></label>
+        <textarea id="diagnosticInput" class="json-area" placeholder='הדבק כאן את בלוק "נתוני אבחון מובנים" שקיבלת בשלב 1'></textarea>
+        <p class="note">יש להדביק כאן את הנתונים מתוך אזור המורה במבדק הדיאגנוסטי.</p>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="secondary" onclick="goTo('screen-hero')">חזרה</button>
+        <button type="button" onclick="generateProgram()">צור תכנית מותאמת</button>
+      </div>
+      <div id="detailsMsg"></div>
+    </div>
+
+    <!-- עמוד תכנית -->
+    <div id="screen-program" class="screen fadein">
+      <div class="program-header">
+        <h2>תכנית לימודים מותאמת אישית</h2>
+        <div id="programMeta"></div>
+      </div>
+
+      <div class="warm-card">
+        <h3>תמצית הקשיים שאותרו במבדק</h3>
+        <div id="difficultySummary"></div>
+      </div>
+
+      <div class="soft-card">
+        <h3>אינדקס האמצעים שנבחרו לתלמיד</h3>
+        <ol id="resourceIndex" class="index-list"></ol>
+      </div>
+
+      <div id="programContent"></div>
+
+      <div class="soft-card">
+        <h3>בלוק נתונים לשלב הבא</h3>
+        <p class="note">אפשר להשתמש בבלוק הזה גם להמשך עיבוד, שמירה, או הזנה לכלי נוסף שיפיק הרחבות או גרסאות נוספות של תכנית הלימוד.</p>
+        <textarea id="programJson" class="json-area" readonly></textarea>
+        <div class="btn-row">
+          <button type="button" class="copy" onclick="copyProgramJson()">העתק נתוני תכנית</button>
+          <button type="button" class="secondary" onclick="goTo('screen-details')">חזרה לעריכת פרטים</button>
+        </div>
+        <div id="programCopyMsg"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentProgramData = null;
+
+    function goTo(id){
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function checkAccess(){
+      const pass = document.getElementById('accessPass').value;
+      const msg = document.getElementById('accessMsg');
+      if(pass !== '0202'){
+        msg.innerHTML = '<p class="status-bad">סיסמה שגויה.</p>';
+        return;
+      }
+      msg.innerHTML = '<p class="status-ok">הכניסה אושרה.</p>';
+      goTo('screen-hero');
+    }
+
+    function safeParseJSON(text){
+      try{
+        return JSON.parse(text);
+      }catch(e){
+        return null;
+      }
+    }
+
+    function generateProgram(){
+      const teacherName = document.getElementById('teacherName').value.trim();
+      const studentName = document.getElementById('studentName2').value.trim();
+      const homeClass = document.getElementById('homeClass').value.trim();
+      const planDate = document.getElementById('planDate').value;
+      const timeframe = document.getElementById('timeframe').value;
+      const studentNotes = document.getElementById('studentNotes').value.trim();
+      const diagnosticText = document.getElementById('diagnosticInput').value.trim();
+      const msg = document.getElementById('detailsMsg');
+
+      if(!teacherName || !studentName){
+        msg.innerHTML = '<p class="status-bad">שם המורה ושם התלמיד הם שדות חובה.</p>';
+        return;
+      }
+
+      const diagnostic = safeParseJSON(diagnosticText);
+      if(!diagnostic){
+        msg.innerHTML = '<p class="status-bad">נתוני האבחון אינם בפורמט תקין. יש להדביק JSON תקין משלב 1.</p>';
+        return;
+      }
+
+      msg.innerHTML = '';
+
+      const domains = diagnostic.domains || {};
+      const weakDomains = Object.entries(domains)
+        .filter(([_, val]) => Number(val.percent) < 60)
+        .map(([key, val]) => ({ key, ...val }));
+
+      const mediumDomains = Object.entries(domains)
+        .filter(([_, val]) => Number(val.percent) >= 60 && Number(val.percent) < 85)
+        .map(([key, val]) => ({ key, ...val }));
+
+      const planItems = buildPlanItems({
+        diagnostic,
+        weakDomains,
+        mediumDomains,
+        timeframe,
+        studentNotes
+      });
+
+      const summaryHtml = buildDifficultySummaryHtml(diagnostic, weakDomains, mediumDomains);
+      const indexHtml = planItems.map((item, idx) => `<li>${escapeHtml(item.title)} <span class="pill">${escapeHtml(item.type)}</span></li>`).join('');
+      const contentHtml = planItems.map((item, idx) => renderPlanItem(item, idx + 1)).join('');
+
+      document.getElementById('programMeta').innerHTML = `
+        <p><strong>שם התלמיד:</strong> ${escapeHtml(studentName)}</p>
+        <p><strong>שם המורה:</strong> ${escapeHtml(teacherName)}</p>
+        <p><strong>כיתת אם:</strong> ${escapeHtml(homeClass || 'לא הוזנה')}</p>
+        <p><strong>תאריך:</strong> ${escapeHtml(planDate || 'לא הוזן')}</p>
+        <p><strong>משך התכנית:</strong> ${timeframe === 'short' ? 'יום עד שלושה ימים' : 'שבוע'}</p>
+      `;
+
+      document.getElementById('difficultySummary').innerHTML = summaryHtml;
+      document.getElementById('resourceIndex').innerHTML = indexHtml;
+      document.getElementById('programContent').innerHTML = contentHtml;
+
+      const programStructured = {
+        teacher_name: teacherName,
+        student_name: studentName,
+        home_class: homeClass,
+        created_at: planDate,
+        timeframe: timeframe,
+        optional_teacher_notes: studentNotes,
+        diagnostic_summary: diagnostic,
+        selected_items: planItems.map(item => ({
+          type: item.type,
+          title: item.title,
+          target_domain: item.target_domain,
+          target_curriculum_topic: item.target_curriculum_topic,
+          pedagogical_goal: item.goal,
+          level: item.level,
+          estimated_load: item.estimated_load
+        }))
+      };
+
+      currentProgramData = programStructured;
+      document.getElementById('programJson').value = JSON.stringify(programStructured, null, 2);
+      goTo('screen-program');
+    }
+
+    function buildDifficultySummaryHtml(diagnostic, weakDomains, mediumDomains){
+      const flags = diagnostic.pedagogical_flags || {};
+      const weakText = weakDomains.length
+        ? weakDomains.map(d => `<li><strong>${escapeHtml(d.domain_name)}:</strong> ${escapeHtml(d.difficulty_type)} (${d.percent}%)</li>`).join('')
+        : '<li>לא זוהו תחומים חלשים ברמת חיזוק משמעותי.</li>';
+
+      const mediumText = mediumDomains.length
+        ? mediumDomains.map(d => `<li><strong>${escapeHtml(d.domain_name)}:</strong> נדרשת העמקה וביסוס נוסף (${d.percent}%).</li>`).join('')
+        : '<li>לא זוהו תחומים ברמת ביניים.</li>';
+
+      return `
+        <p><strong>רמת שליטה כללית:</strong> ${escapeHtml(diagnostic.summary?.level || '')}</p>
+        <p><strong>משמעות כללית:</strong> ${escapeHtml(diagnostic.summary?.meaning || '')}</p>
+
+        <div class="card">
+          <h4>תחומים המחייבים חיזוק</h4>
+          <ul>${weakText}</ul>
+        </div>
+
+        <div class="card">
+          <h4>תחומים הדורשים ביסוס והעמקה</h4>
+          <ul>${mediumText}</ul>
+        </div>
+
+        <div class="card">
+          <h4>דגשים פדגוגיים כלליים</h4>
+          <ul>
+            <li><strong>ידע חישובי:</strong> ${escapeHtml(flags.computational_knowledge || '')}</li>
+            <li><strong>פתרון בעיות ויישום:</strong> ${escapeHtml(flags.application_and_problem_solving || '')}</li>
+            <li><strong>חשיבה והנמקה:</strong> ${escapeHtml(flags.mathematical_reasoning || '')}</li>
+            <li><strong>מדידה ומבנים:</strong> ${escapeHtml(flags.geometry_and_measurement || '')}</li>
+          </ul>
+        </div>
+      `;
+    }
+
+    function buildPlanItems({diagnostic, weakDomains, mediumDomains, timeframe, studentNotes}){
+      const items = [];
+      const domainLookup = diagnostic.domains || {};
+
+      const preferredDomains = weakDomains.length ? weakDomains : mediumDomains;
+
+      const prioritized = preferredDomains.length
+        ? preferredDomains
+        : Object.entries(domainLookup).map(([k,v]) => ({key:k, ...v}));
+
+      const maxItems = timeframe === 'week' ? 5 : 3;
+
+      const generators = {
+        numbers: () => buildWorksheet(
+          'דף עבודה מותאם – מספרים ופעולות',
+          'מספרים ופעולות',
+          domainLookup.numbers?.curriculum_topic || 'מספרים טבעיים ופעולות',
+          'חיזוק ערך ספרה, חיבור, חיסור, כפל וחילוק מדורג.',
+          'בסיס',
+          [
+            {
+              prompt:'חשב: 4,208 + 1,376',
+              hint:'חבר תחילה אחדות, אחר כך עשרות, מאות ואלפים.',
+              answer:'5,584',
+              feedback:'אם טעית, בדוק האם ביצעת המרה נכונה בין עשרות למאות.'
+            },
+            {
+              prompt:'חשב: 8,540 - 2,175',
+              hint:'אפשר לפרק את החיסור לשלבים או לבצע במאונך.',
+              answer:'6,365',
+              feedback:'בדוק במיוחד את שלב ההשאלה בעשרות ובמאות.'
+            },
+            {
+              prompt:'מה הערך של הספרה 6 במספר 46,218?',
+              hint:'חשוב באיזה מקום נמצאת הספרה.',
+              answer:'6,000',
+              feedback:'הספרה 6 נמצאת במקום האלפים.'
+            }
+          ],
+          'קצר'
+        ),
+        fractions: () => buildQuiz(
+          'חידון ממוקד – שברים',
+          'שברים',
+          domainLookup.fractions?.curriculum_topic || 'שברים פשוטים',
+          'ביסוס הבנה של השוואת שברים, חלק־שלם וחיבור שברים פשוטים.',
+          'בסיס עד בינוני',
+          [
+            {
+              prompt:'מה גדול יותר: 3/4 או 5/8?',
+              hint:'השווה בעזרת ציור, או המר למכנה משותף.',
+              answer:'3/4',
+              feedback:'3/4 שווה 6/8 ולכן הוא גדול מ־5/8.'
+            },
+            {
+              prompt:'חשב: 1/2 + 1/4',
+              hint:'כתוב את 1/2 כשבר במכנה 4.',
+              answer:'3/4',
+              feedback:'1/2 שווה 2/4, ולכן 2/4 + 1/4 = 3/4.'
+            }
+          ],
+          'קצר'
+        ),
+        wordProblems: () => buildWorksheet(
+          'דף עבודה מדורג – בעיות מילוליות',
+          'בעיות מילוליות',
+          domainLookup.wordProblems?.curriculum_topic || 'פתרון בעיות מילוליות',
+          'חיזוק תרגום של סיטואציה לפעולה חשבונית ופתרון בעיות רב־שלביות.',
+          'בינוני',
+          [
+            {
+              prompt:'בכיתה יש 27 תלמידים. כל תלמיד קיבל 3 דפי עבודה. כמה דפים חולקו?',
+              hint:'שאל את עצמך: כמה דפים לכל תלמיד? האם זו פעולת כפל?',
+              answer:'81',
+              feedback:'27 × 3 = 81.'
+            },
+            {
+              prompt:'מחיר מחברת הוא 12 ₪. דנה קנתה 4 מחברות ושילמה בשטר של 50 ₪. כמה עודף קיבלה?',
+              hint:'חשב קודם את המחיר הכולל, ורק אחר כך את העודף.',
+              answer:'2',
+              feedback:'4 × 12 = 48, ולכן העודף הוא 2 ₪.'
+            },
+            {
+              prompt:'בספרייה היו 180 ספרים. הגיעו עוד 35 ואז 20 הושאלו. כמה נשארו?',
+              hint:'בנה רצף פעולות לפי הסיפור.',
+              answer:'195',
+              feedback:'180 + 35 = 215, ואז 215 - 20 = 195.'
+            }
+          ],
+          'בינוני'
+        ),
+        geometry: () => buildLesson(
+          'מערך שיעור קצר – היקף, שטח ומדידה',
+          'גאומטריה ומדידה',
+          domainLookup.geometry?.curriculum_topic || 'היקף, שטח, יחידות מידה',
+          'להבחין בין היקף לשטח ולחזק המרות יחידות בסיסיות.',
+          'בסיס עד בינוני',
+          [
+            'פתיחה קצרה: מה ההבדל בין היקף לשטח?',
+            'דוגמה מונחית: מלבן באורך 7 וברוחב 3 – חישוב היקף ואז שטח.',
+            'שתי משימות תרגול מדורגות.',
+            'בדיקת הבנה קצרה בסיום.'
+          ],
+          [
+            {
+              prompt:'מהו ההיקף של מלבן שאורכו 7 ס״מ ורוחבו 3 ס״מ?',
+              hint:'זכור: היקף הוא סכום כל הצלעות.',
+              answer:'20 ס״מ',
+              feedback:'2 × (7 + 3) = 20.'
+            },
+            {
+              prompt:'מהו השטח של אותו מלבן?',
+              hint:'שטח מלבן = אורך × רוחב.',
+              answer:'21 סמ״ר',
+              feedback:'7 × 3 = 21.'
+            }
+          ],
+          'קצר'
+        ),
+        thinking: () => buildQuiz(
+          'חידון חשיבה והסבר',
+          'חשיבה מתמטית והבנה',
+          domainLookup.thinking?.curriculum_topic || 'נימוק והסבר מתמטי',
+          'חיזוק יכולת להסביר, לבדוק תשובה ולהצדיק מהלך מתמטי.',
+          'בינוני',
+          [
+            {
+              prompt:'כתוב בקצרה למה 40 + 60 שווה 100.',
+              hint:'אפשר להסביר באמצעות חיבור ישיר.',
+              answer:'כי 40 ועוד 60 שווה 100.',
+              feedback:'המטרה היא הסבר ברור וישיר, לא ניסוח מורכב.'
+            },
+            {
+              prompt:'מה קורה למספר כאשר מחלקים אותו ב־100?',
+              hint:'חשוב האם הוא גדל או קטן.',
+              answer:'הוא קטן פי 100.',
+              feedback:'לדוגמה: 500 ÷ 100 = 5.'
+            }
+          ],
+          'קצר'
+        ),
+        literacy: () => buildWorksheet(
+          'דף עבודה יישומי – אוריינות מתמטית',
+          'אוריינות מתמטית',
+          domainLookup.literacy?.curriculum_topic || 'יישום בהקשרים יומיומיים',
+          'יישום מתמטיקה במצבי זמן, כסף, מחירים ויחסים.',
+          'בינוני',
+          [
+            {
+              prompt:'אוטובוס יצא ב־13:20 והנסיעה נמשכה שעה ו־35 דקות. מתי הגיע?',
+              hint:'חבר תחילה שעה, ואז 35 דקות.',
+              answer:'14:55',
+              feedback:'13:20 + 1:00 = 14:20, ועוד 35 דקות = 14:55.'
+            },
+            {
+              prompt:'3 בקבוקי מים עולים 18 ₪. כמה יעלו 5 בקבוקים, אם המחיר לבקבוק קבוע?',
+              hint:'מצא תחילה את המחיר לבקבוק אחד.',
+              answer:'30',
+              feedback:'18 ÷ 3 = 6, ואז 6 × 5 = 30.'
+            }
+          ],
+          'קצר'
+        )
+      };
+
+      const order = [];
+      prioritized.forEach(d => {
+        if (!order.includes(d.key) && generators[d.key]) order.push(d.key);
+      });
+
+      ['numbers','fractions','wordProblems','geometry','thinking','literacy'].forEach(k => {
+        if (!order.includes(k) && generators[k] && order.length < maxItems) order.push(k);
+      });
+
+      const chosen = order.slice(0, maxItems);
+
+      chosen.forEach((key, idx) => {
+        items.push(generators[key]());
+      });
+
+      if (timeframe === 'week' && items.length < 5) {
+        items.push(buildQuiz(
+          'חידון מסכם קצר',
+          'סיכום',
+          'חזרה ממוקדת על תחומי החיזוק',
+          'חיזוק תחושת הצלחה באמצעות משימות קצרות ומדורגות.',
+          'קל עד בינוני',
+          [
+            {
+              prompt:'מה גדול יותר: 700 או 70?',
+              hint:'חשוב על ערך ספרה.',
+              answer:'700',
+              feedback:'700 גדול מ־70 כי הוא כולל מאות ולא רק עשרות.'
+            },
+            {
+              prompt:'חשב: 1/4 + 1/4',
+              hint:'חבר את המונים כשהמכנה זהה.',
+              answer:'1/2',
+              feedback:'1/4 + 1/4 = 2/4 = 1/2.'
+            }
+          ],
+          'קצר'
+        ));
+      }
+
+      if (studentNotes) {
+        items.forEach(item => {
+          item.teacher_customization = 'התאמה לפי הערות המורה: ' + studentNotes;
+        });
+      }
+
+      return items;
+    }
+
+    function buildWorksheet(title, domain, topic, goal, level, exercises, estimatedLoad){
+      return {
+        type:'דף עבודה',
+        title,
+        target_domain:domain,
+        target_curriculum_topic:topic,
+        goal,
+        level,
+        estimated_load:estimatedLoad,
+        explanation:'הדף בנוי בהדרגה מהקל אל הקשה, תוך שאיפה לייצר חוויית הצלחה. בכל תרגיל ניתן לתת רמז, לחשוף תשובה ולספק פידבק במקרה של טעות.',
+        examples:[
+          'קוראים את השאלה לאט ומסמנים נתונים מרכזיים.',
+          'בודקים אם מדובר בחיבור, חיסור, כפל, חילוק או שילוב של כמה פעולות.'
+        ],
+        exercises
+      };
+    }
+
+    function buildQuiz(title, domain, topic, goal, level, exercises, estimatedLoad){
+      return {
+        type:'חידון ממוקד',
+        title,
+        target_domain:domain,
+        target_curriculum_topic:topic,
+        goal,
+        level,
+        estimated_load:estimatedLoad,
+        explanation:'החידון קצר, ממוקד, ונועד לחזק את השליטה בנושא אחד או שניים בצורה ידידותית ומהירה.',
+        examples:[
+          'קודם חושבים מה מבקשים למצוא.',
+          'אם נתקעים – משתמשים ברמז ורק אחר כך בודקים תשובה.'
+        ],
+        exercises
+      };
+    }
+
+    function buildLesson(title, domain, topic, goal, level, lessonSteps, exercises, estimatedLoad){
+      return {
+        type:'מערך שיעור',
+        title,
+        target_domain:domain,
+        target_curriculum_topic:topic,
+        goal,
+        level,
+        estimated_load:estimatedLoad,
+        explanation:'מערך קצר וברור שנועד להוראה ישירה, תיווך והבנה, לפני או לצד תרגול עצמאי.',
+        lesson_steps:lessonSteps,
+        examples:[
+          'המורה מדגים שאלה אחת מונחית.',
+          'התלמיד פותר שאלה דומה בעזרת רמז.'
+        ],
+        exercises
+      };
+    }
+
+    function renderPlanItem(item, idx){
+      const stepsHtml = item.lesson_steps
+        ? `<div class="mini-title">רצף מוצע לשיעור</div><ul>${item.lesson_steps.map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>`
+        : '';
+
+      const customHtml = item.teacher_customization
+        ? `<div class="feedback"><strong>התאמה נוספת לפי המורה:</strong> ${escapeHtml(item.teacher_customization)}</div>`
+        : '';
+
+      return `
+        <details open>
+          <summary>${idx}. ${escapeHtml(item.title)} <span class="pill">${escapeHtml(item.type)}</span></summary>
+
+          <div class="mini-title">מטרה</div>
+          <p>${escapeHtml(item.goal)}</p>
+
+          <div class="mini-title">תחום יעד</div>
+          <p>${escapeHtml(item.target_domain)} | ${escapeHtml(item.target_curriculum_topic)} | רמה: ${escapeHtml(item.level)}</p>
+
+          <div class="mini-title">הסבר למורה / לתלמיד</div>
+          <p>${escapeHtml(item.explanation)}</p>
+
+          <div class="mini-title">דוגמאות מנחות</div>
+          <ul>${(item.examples || []).map(ex=>`<li>${escapeHtml(ex)}</li>`).join('')}</ul>
+
+          ${stepsHtml}
+          ${customHtml}
+
+          <div class="mini-title">תרגול מותאם</div>
+          ${(item.exercises || []).map((ex, exIdx) => `
+            <div class="exercise-box">
+              <strong>תרגיל ${exIdx + 1}:</strong> ${escapeHtml(ex.prompt)}
+              <div class="btn-row">
+                <button type="button" class="hint-btn" onclick="toggleBlock('hint-${idx}-${exIdx}')">הצג רמז</button>
+                <button type="button" class="answer-btn" onclick="toggleBlock('answer-${idx}-${exIdx}')">הצג תשובה ופידבק</button>
+              </div>
+              <div id="hint-${idx}-${exIdx}" class="feedback hidden"><strong>רמז:</strong> ${escapeHtml(ex.hint)}</div>
+              <div id="answer-${idx}-${exIdx}" class="feedback hidden"><strong>תשובה:</strong> ${escapeHtml(ex.answer)}<br><strong>פידבק:</strong> ${escapeHtml(ex.feedback)}</div>
+            </div>
+          `).join('')}
+        </details>
+      `;
+    }
+
+    function toggleBlock(id){
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.toggle('hidden');
+    }
+
+    function copyProgramJson(){
+      const area = document.getElementById('programJson');
+      area.select();
+      area.setSelectionRange(0,999999);
+      navigator.clipboard.writeText(area.value).then(() => {
+        document.getElementById('programCopyMsg').innerHTML = '<p class="status-ok">נתוני התכנית הועתקו.</p>';
+      }).catch(() => {
+        document.getElementById('programCopyMsg').innerHTML = '<p class="status-warn">לא ניתן היה להעתיק אוטומטית. אפשר להעתיק ידנית מתוך החלון.</p>';
+      });
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'",'&#39;');
+    }
+  </script>
+</body>
+</html>
