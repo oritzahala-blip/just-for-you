@@ -34,7 +34,7 @@
       padding:28px;
       box-shadow:0 8px 24px rgba(0,0,0,.08);
     }
-    h1,h2,h3{margin-top:0;line-height:1.35}
+    h1,h2,h3,h4{margin-top:0;line-height:1.35}
     p,li{line-height:1.7}
     .lead{color:var(--muted);margin-bottom:22px}
     .section{display:none}
@@ -188,7 +188,6 @@
     <p class="lead">המבדק בנוי לפי תחומי תוכן. בסיום יוצג לתלמיד רק ציון מספרי. למורה יש אזור מוגן בסיסמה עם ניתוח מפורט ונתוני אבחון מובנים, שנועדו גם לשלב הבא של התאמת תכנית לימודים אישית.</p>
 
     <form id="quizForm">
-      <!-- פתיחה -->
       <div class="section active">
         <h2>דף הוראות לנבחן</h2>
         <div class="question">
@@ -207,9 +206,20 @@
             <p><strong>שם התלמיד</strong></p>
             <input type="text" id="studentName" placeholder="הזן שם" />
           </div>
+
           <div class="question">
             <p><strong>כיתה</strong></p>
             <input type="text" id="studentClass" placeholder="לדוגמה: ה׳2" />
+          </div>
+
+          <div class="question">
+            <p><strong>שם המורה</strong></p>
+            <input type="text" id="teacherName" placeholder="הזן שם מורה" />
+          </div>
+
+          <div class="question">
+            <p><strong>כתובת מייל של המורה (אופציונלי)</strong></p>
+            <input type="text" id="teacherEmail" placeholder="teacher@example.com" />
           </div>
         </div>
 
@@ -218,7 +228,6 @@
         </div>
       </div>
 
-      <!-- תחום 1 -->
       <div class="section">
         <div class="progress">תחום 1 מתוך 6 • מספרים ופעולות</div>
         <h2>מספרים ופעולות</h2>
@@ -295,7 +304,6 @@
         </div>
       </div>
 
-      <!-- תחום 2 -->
       <div class="section">
         <div class="progress">תחום 2 מתוך 6 • שברים</div>
         <h2>שברים</h2>
@@ -361,7 +369,6 @@
         </div>
       </div>
 
-      <!-- תחום 3 -->
       <div class="section">
         <div class="progress">תחום 3 מתוך 6 • בעיות מילוליות</div>
         <h2>בעיות מילוליות</h2>
@@ -428,7 +435,6 @@
         </div>
       </div>
 
-      <!-- תחום 4 -->
       <div class="section">
         <div class="progress">תחום 4 מתוך 6 • גאומטריה ומדידה</div>
         <h2>גאומטריה ומדידה</h2>
@@ -494,7 +500,6 @@
         </div>
       </div>
 
-      <!-- תחום 5 -->
       <div class="section">
         <div class="progress">תחום 5 מתוך 6 • חשיבה מתמטית והבנה</div>
         <h2>חשיבה מתמטית והבנה</h2>
@@ -540,7 +545,6 @@
         </div>
       </div>
 
-      <!-- תחום 6 -->
       <div class="section">
         <div class="progress">תחום 6 מתוך 6 • אוריינות מתמטית</div>
         <h2>אוריינות מתמטית</h2>
@@ -904,6 +908,72 @@
       };
     }
 
+    function sendResultsEmail(data) {
+      const teacherEmail = document.getElementById('teacherEmail')?.value?.trim();
+      const teacherName = document.getElementById('teacherName')?.value?.trim() || 'לא הוזן';
+      const studentName = data.student?.name || '';
+      const className = data.student?.className || '';
+      const score = String(data.total?.percent ?? '');
+      const strengths = (data.strengths || []).join(', ') || 'לא זוהו';
+      const weaknesses = (data.needsSupport || []).join(', ') || 'לא זוהו';
+      const summary = data.total?.meaning || '';
+      const today = new Date().toLocaleDateString('he-IL');
+
+      if (!teacherEmail) {
+        return Promise.resolve({ skipped: true });
+      }
+
+      const payload = {
+        access_key: "e119b175-515e-48a0-b5b4-bfc906e5d00b",
+        subject: `תוצאות מבדק מתמטיקה - ${studentName}`,
+        from_name: "מערכת המבדק הדיאגנוסטי",
+        email: teacherEmail,
+        replyto: teacherEmail,
+        teacher_email: teacherEmail,
+        teacher_name: teacherName,
+        student_name: studentName,
+        class_name: className,
+        date: today,
+        score: score,
+        strengths: strengths,
+        weaknesses: weaknesses,
+        summary: summary,
+        full_data: JSON.stringify(data.structured, null, 2),
+        botcheck: ""
+      };
+
+      return fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }).then(async (response) => {
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Web3Forms send failed");
+        }
+        return result;
+      });
+    }
+
+    function continueToPlanGenerator() {
+      const data = window.fullAnalysisData;
+      if (!data) return;
+
+      const teacherName = document.getElementById('teacherName')?.value?.trim() || '';
+      const teacherEmail = document.getElementById('teacherEmail')?.value?.trim() || '';
+
+      localStorage.setItem('diagnosticStructuredData', JSON.stringify(data.structured));
+      localStorage.setItem('diagnosticStudentName', data.student?.name || '');
+      localStorage.setItem('diagnosticClassName', data.student?.className || '');
+      localStorage.setItem('diagnosticTeacherName', teacherName);
+      localStorage.setItem('diagnosticTeacherEmail', teacherEmail);
+
+      window.location.href = 'plan-generator.html';
+    }
+
     function calculateResults() {
       const data = buildResultsPayload();
       document.getElementById('quizForm').classList.add('hidden');
@@ -917,6 +987,47 @@
 
       document.getElementById('teacherAccess').classList.remove('hidden');
       window.fullAnalysisData = data;
+
+      localStorage.setItem('diagnosticStructuredData', JSON.stringify(data.structured));
+      localStorage.setItem('diagnosticStudentName', data.student?.name || '');
+      localStorage.setItem('diagnosticClassName', data.student?.className || '');
+      localStorage.setItem('diagnosticTeacherName', document.getElementById('teacherName')?.value?.trim() || '');
+      localStorage.setItem('diagnosticTeacherEmail', document.getElementById('teacherEmail')?.value?.trim() || '');
+
+      sendResultsEmail(data).then(() => {
+        const accessBox = document.getElementById('teacherAccess');
+        const emailValue = document.getElementById('teacherEmail')?.value?.trim();
+        const msg = emailValue
+          ? '<p class="status-ok">תוצאות המבדק נשלחו למייל שהוגדר.</p>'
+          : '<p class="status-warn">לא הוגדרה כתובת מייל, לכן לא נשלח מייל.</p>';
+
+        if (!document.getElementById('continuePlanBox')) {
+          accessBox.insertAdjacentHTML(
+            'beforeend',
+            `
+            <div class="btn-row" id="continuePlanBox">
+              <button type="button" class="ghost" onclick="continueToPlanGenerator()">המשך למחולל תכנית מותאמת</button>
+            </div>
+            ${msg}
+            `
+          );
+        }
+      }).catch((error) => {
+        const accessBox = document.getElementById('teacherAccess');
+        if (!document.getElementById('continuePlanBox')) {
+          accessBox.insertAdjacentHTML(
+            'beforeend',
+            `
+            <p class="status-bad">שליחת המייל נכשלה: ${escapeHtml(error.message)}</p>
+            <div class="btn-row" id="continuePlanBox">
+              <button type="button" class="ghost" onclick="continueToPlanGenerator()">המשך למחולל תכנית מותאמת</button>
+            </div>
+            `
+          );
+        }
+        console.error('Web3Forms send failed:', error);
+      });
+
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -955,6 +1066,7 @@
           <h3>ניתוח מפורט למורה</h3>
           <p><strong>שם התלמיד:</strong> ${escapeHtml(data.student.name || 'לא הוזן')}</p>
           <p><strong>כיתה:</strong> ${escapeHtml(data.student.className || 'לא הוזנה')}</p>
+          <p><strong>שם המורה:</strong> ${escapeHtml(document.getElementById('teacherName')?.value?.trim() || 'לא הוזן')}</p>
           <p><strong>ציון סופי:</strong> ${data.total.percent} <span class="pill">${escapeHtml(data.total.level)}</span></p>
           <p><strong>משמעות כללית:</strong> ${escapeHtml(data.total.meaning)}</p>
 
@@ -1001,10 +1113,11 @@
           <p class="note">הבלוק הבא נבנה במיוחד כדי שבשלב הבא יהיה אפשר להזין אותו לקוד שיפיק תכנית למידה מותאמת: דפי עבודה, מבחנים קצרים, חידונים, מערכי שיעור והתאמות נוספות.</p>
 
           <div class="small-title">נתוני אבחון להעתקה</div>
-<textarea id="structuredDataArea" class="json-area" readonly>${JSON.stringify(data.structured, null, 2)}</textarea>
+          <textarea id="structuredDataArea" class="json-area" readonly>${JSON.stringify(data.structured, null, 2)}</textarea>
 
           <div class="btn-row">
             <button type="button" class="copybtn" onclick="copyStructuredData()">העתק נתוני אבחון</button>
+            <button type="button" class="ghost" onclick="continueToPlanGenerator()">המשך למחולל תכנית מותאמת</button>
           </div>
           <div id="copyMsg"></div>
         </div>
