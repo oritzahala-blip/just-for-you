@@ -1001,7 +1001,7 @@
           <p class="note">הבלוק הבא נבנה במיוחד כדי שבשלב הבא יהיה אפשר להזין אותו לקוד שיפיק תכנית למידה מותאמת: דפי עבודה, מבחנים קצרים, חידונים, מערכי שיעור והתאמות נוספות.</p>
 
           <div class="small-title">נתוני אבחון להעתקה</div>
-          <textarea id="structuredDataArea" class="json-area" readonly>${escapeHtml(JSON.stringify(data.structured, null, 2))}</textarea>
+<textarea id="structuredDataArea" class="json-area" readonly>${JSON.stringify(data.structured, null, 2)}</textarea>
 
           <div class="btn-row">
             <button type="button" class="copybtn" onclick="copyStructuredData()">העתק נתוני אבחון</button>
