@@ -918,6 +918,7 @@
       const weaknesses = (data.needsSupport || []).join(', ') || 'לא זוהו';
       const summary = data.total?.meaning || '';
       const today = new Date().toLocaleDateString('he-IL');
+      const planGeneratorUrl = "https://oritzahala-blip.github.io/just-for-you/plan-generator.html";
 
       if (!teacherEmail) {
         return Promise.resolve({ skipped: true });
@@ -938,6 +939,8 @@
         strengths: strengths,
         weaknesses: weaknesses,
         summary: summary,
+        plan_generator_url: planGeneratorUrl,
+        copy_instruction: "פתח את הקישור למחולל, ולאחר מכן הדבק בשדה נתוני האבחון את הבלוק המלא שמופיע במייל זה.",
         full_data: JSON.stringify(data.structured, null, 2),
         botcheck: ""
       };
