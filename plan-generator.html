@@ -237,7 +237,6 @@
 </head>
 <body>
   <div class="container">
-    <!-- מסך סיסמה -->
     <div id="screen-auth" class="screen active fadein">
       <h1>מחולל תכנית לימודים מותאמת</h1>
       <p class="lead">הכניסה למחולל מאובטחת בסיסמה.</p>
@@ -252,7 +251,6 @@
       </div>
     </div>
 
-    <!-- שער -->
     <div id="screen-hero" class="screen fadein">
       <div class="hero-wrap">
         <h1 class="hero-title">מחולל תכנית לימודים מותאמת אישית</h1>
@@ -282,7 +280,6 @@
           <rect x="220" y="296" width="24" height="100" fill="#8c572b"/>
           <rect x="655" y="296" width="24" height="100" fill="#8c572b"/>
 
-          <!-- ילד -->
           <circle cx="330" cy="205" r="42" fill="#ffd8bd"/>
           <path d="M292 198 C300 150, 360 145, 372 192" fill="#5b3a2d"/>
           <circle cx="317" cy="208" r="4" fill="#1f2937"/>
@@ -294,7 +291,6 @@
           <rect x="278" y="265" width="20" height="65" rx="10" fill="#ffd8bd"/>
           <rect x="364" y="265" width="20" height="60" rx="10" fill="#ffd8bd"/>
 
-          <!-- מורה -->
           <circle cx="575" cy="190" r="46" fill="#ffd8bd"/>
           <path d="M536 185 C540 130, 610 128, 620 190" fill="#4b5563"/>
           <circle cx="560" cy="193" r="4" fill="#1f2937"/>
@@ -306,7 +302,6 @@
           <rect x="511" y="260" width="22" height="72" rx="10" fill="#ffd8bd"/>
           <rect x="619" y="258" width="22" height="68" rx="10" fill="#ffd8bd"/>
 
-          <!-- מחברת ולוח קטן -->
           <rect x="395" y="230" width="96" height="60" rx="8" fill="#fff" stroke="#cbd5e1"/>
           <line x1="443" y1="230" x2="443" y2="290" stroke="#cbd5e1"/>
           <text x="420" y="258" font-size="16" fill="#194185">3/4</text>
@@ -329,15 +324,17 @@
       </div>
     </div>
 
-    <!-- עמוד פרטים -->
     <div id="screen-details" class="screen fadein">
       <h2>פרטי התלמיד ונתוני הקלט</h2>
-      <p class="lead">מלא את הפרטים הנדרשים, הדבק את נתוני האבחון משלב 1, ובחר את מסגרת הזמן לתכנית.</p>
+      <p class="lead">מלא את הפרטים הנדרשים, בדוק את נתוני האבחון שנטענו, ובחר את מסגרת הזמן לתכנית.</p>
 
       <div class="grid-2">
         <div class="card">
           <label for="teacherName">שם המורה <span style="color:#b42318">*</span></label>
           <input type="text" id="teacherName" placeholder="שם המורה" />
+
+          <label for="teacherEmail">מייל המורה (אופציונלי)</label>
+          <input type="text" id="teacherEmail" placeholder="teacher@example.com" />
 
           <label for="studentName2">שם התלמיד <span style="color:#b42318">*</span></label>
           <input type="text" id="studentName2" placeholder="שם התלמיד" />
@@ -363,8 +360,8 @@
 
       <div class="card">
         <label for="diagnosticInput">נתוני האבחון משלב 1 <span style="color:#b42318">*</span></label>
-        <textarea id="diagnosticInput" class="json-area" placeholder='הדבק כאן את בלוק "נתוני אבחון מובנים" שקיבלת בשלב 1'></textarea>
-        <p class="note">יש להדביק כאן את הנתונים מתוך אזור המורה במבדק הדיאגנוסטי.</p>
+        <textarea id="diagnosticInput" class="json-area" placeholder='כאן ייטענו אוטומטית נתוני האבחון משלב 1'></textarea>
+        <p class="note">אם הגעת לכאן ישירות ולא מתוך המבדק, אפשר גם להדביק כאן ידנית את נתוני האבחון.</p>
       </div>
 
       <div class="btn-row">
@@ -374,7 +371,6 @@
       <div id="detailsMsg"></div>
     </div>
 
-    <!-- עמוד תכנית -->
     <div id="screen-program" class="screen fadein">
       <div class="program-header">
         <h2>תכנית לימודים מותאמת אישית</h2>
@@ -434,8 +430,51 @@
       }
     }
 
+    function preloadDiagnosticData() {
+      const diagnostic = localStorage.getItem('diagnosticStructuredData');
+      const studentName = localStorage.getItem('diagnosticStudentName') || '';
+      const className = localStorage.getItem('diagnosticClassName') || '';
+      const teacherName = localStorage.getItem('diagnosticTeacherName') || '';
+      const teacherEmail = localStorage.getItem('diagnosticTeacherEmail') || '';
+
+      const diagnosticInput = document.getElementById('diagnosticInput');
+      if (diagnosticInput && !diagnosticInput.value.trim() && diagnostic) {
+        diagnosticInput.value = diagnostic;
+      }
+
+      const studentField = document.getElementById('studentName2');
+      if (studentField && !studentField.value.trim()) {
+        studentField.value = studentName;
+      }
+
+      const classField = document.getElementById('homeClass');
+      if (classField && !classField.value.trim()) {
+        classField.value = className;
+      }
+
+      const teacherField = document.getElementById('teacherName');
+      if (teacherField && !teacherField.value.trim()) {
+        teacherField.value = teacherName;
+      }
+
+      const teacherEmailField = document.getElementById('teacherEmail');
+      if (teacherEmailField && !teacherEmailField.value.trim()) {
+        teacherEmailField.value = teacherEmail;
+      }
+
+      const dateField = document.getElementById('planDate');
+      if (dateField && !dateField.value) {
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        dateField.value = `${yyyy}-${mm}-${dd}`;
+      }
+    }
+
     function generateProgram(){
       const teacherName = document.getElementById('teacherName').value.trim();
+      const teacherEmail = document.getElementById('teacherEmail').value.trim();
       const studentName = document.getElementById('studentName2').value.trim();
       const homeClass = document.getElementById('homeClass').value.trim();
       const planDate = document.getElementById('planDate').value;
@@ -451,7 +490,7 @@
 
       const diagnostic = safeParseJSON(diagnosticText);
       if(!diagnostic){
-        msg.innerHTML = '<p class="status-bad">נתוני האבחון אינם בפורמט תקין. יש להדביק JSON תקין משלב 1.</p>';
+        msg.innerHTML = '<p class="status-bad">נתוני האבחון אינם בפורמט תקין.</p>';
         return;
       }
 
@@ -481,6 +520,7 @@
       document.getElementById('programMeta').innerHTML = `
         <p><strong>שם התלמיד:</strong> ${escapeHtml(studentName)}</p>
         <p><strong>שם המורה:</strong> ${escapeHtml(teacherName)}</p>
+        <p><strong>מייל המורה:</strong> ${escapeHtml(teacherEmail || 'לא הוזן')}</p>
         <p><strong>כיתת אם:</strong> ${escapeHtml(homeClass || 'לא הוזנה')}</p>
         <p><strong>תאריך:</strong> ${escapeHtml(planDate || 'לא הוזן')}</p>
         <p><strong>משך התכנית:</strong> ${timeframe === 'short' ? 'יום עד שלושה ימים' : 'שבוע'}</p>
@@ -492,6 +532,7 @@
 
       const programStructured = {
         teacher_name: teacherName,
+        teacher_email: teacherEmail,
         student_name: studentName,
         home_class: homeClass,
         created_at: planDate,
@@ -553,9 +594,7 @@
     function buildPlanItems({diagnostic, weakDomains, mediumDomains, timeframe, studentNotes}){
       const items = [];
       const domainLookup = diagnostic.domains || {};
-
       const preferredDomains = weakDomains.length ? weakDomains : mediumDomains;
-
       const prioritized = preferredDomains.length
         ? preferredDomains
         : Object.entries(domainLookup).map(([k,v]) => ({key:k, ...v}));
@@ -726,7 +765,7 @@
 
       const chosen = order.slice(0, maxItems);
 
-      chosen.forEach((key, idx) => {
+      chosen.forEach((key) => {
         items.push(generators[key]());
       });
 
@@ -888,6 +927,8 @@
         .replaceAll('"','&quot;')
         .replaceAll("'",'&#39;');
     }
+
+    document.addEventListener('DOMContentLoaded', preloadDiagnosticData);
   </script>
 </body>
 </html>
