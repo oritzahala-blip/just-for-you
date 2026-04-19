@@ -62,8 +62,7 @@
     input[type="text"],
     input[type="number"],
     textarea,
-    select,
-    input[type="password"]{
+    select{
       width:100%;
       margin-top:8px;
       padding:11px 12px;
@@ -179,7 +178,7 @@
 <body>
   <div class="container">
     <h1>מבדק דיאגנוסטי במתמטיקה – כיתה ה׳</h1>
-    <p class="lead">המבדק בנוי לפי תחומי תוכן. בסיום יוצג לתלמיד רק ציון מספרי. למורה יש אזור מוגן בסיסמה עם ניתוח מפורט ונתוני אבחון מובנים, שנועדו גם לשלב הבא של התאמת תכנית לימודים אישית.</p>
+    <p class="lead">המבדק בנוי לפי תחומי תוכן. בסיום יוצג לתלמיד רק ציון מספרי. לאחר מכן אפשר לפתוח מיד תכנית למידה מותאמת, לשלוח תקציר אבחון לטופס Microsoft Forms, או להציג אבחון מלא.</p>
 
     <form id="quizForm">
       <div class="section active">
@@ -590,13 +589,7 @@
     <div id="studentResult" class="result-box hidden"></div>
 
     <div id="teacherAccess" class="teacher-box hidden">
-      <h3>כניסת מורה</h3>
-      <p>הזן קוד גישה כדי לצפות בניתוח המלא.</p>
-      <input type="password" id="analysisPassword" placeholder="הזן קוד גישה" />
-      <div class="btn-row">
-        <button type="button" onclick="unlockAnalysis()">פתח ניתוח</button>
-      </div>
-      <div id="passwordMessage"></div>
+      <h3>אבחון מלא</h3>
       <div id="teacherAnalysis" class="hidden"></div>
     </div>
   </div>
@@ -915,8 +908,7 @@
 
       const studentName = data.student?.name || '';
       const className = data.student?.className || '';
-
-      let ageLayer = className || '';
+      const ageLayer = className || '';
 
       const strengths = (data.strengths || []).join(', ') || 'לא זוהו';
       const weaknesses = (data.needsSupport || []).join(', ') || 'לא זוהו';
@@ -949,6 +941,12 @@ ${data.total?.meaning || ''}`;
     function calculateResults() {
       const data = buildResultsPayload();
       document.getElementById('quizForm').classList.add('hidden');
+      window.fullAnalysisData = data;
+
+      localStorage.setItem('diagnosticStructuredData', JSON.stringify(data.structured));
+      localStorage.setItem('diagnosticStudentName', data.student?.name || '');
+      localStorage.setItem('diagnosticClassName', data.student?.className || '');
+      localStorage.setItem('diagnosticTeacherName', document.getElementById('teacherName')?.value?.trim() || '');
 
       const studentResult = document.getElementById('studentResult');
       studentResult.innerHTML = `
@@ -956,20 +954,14 @@ ${data.total?.meaning || ''}`;
         <p class="score-sub">הציון הסופי</p>
 
         <div class="btn-row">
+          <button type="button" class="ghost" onclick="continueToPlanGenerator()">פתח תכנית למידה מותאמת</button>
           <button type="button" class="ghost" onclick="openMicrosoftForm()">שלח תקציר אבחון לטופס Microsoft Forms</button>
+          <button type="button" class="secondary" onclick="showOpenAnalysis()">הצג אבחון מלא</button>
         </div>
 
-        <p class="note">אם נדרש ניתוח מלא למורה, אפשר להיכנס לאזור המורה בהמשך העמוד.</p>
+        <p class="note">אפשר לפתוח עכשיו תכנית למידה אישית, לשלוח תקציר אבחון למורה, או להציג את האבחון המלא.</p>
       `;
       studentResult.classList.remove('hidden');
-
-      document.getElementById('teacherAccess').classList.remove('hidden');
-      window.fullAnalysisData = data;
-
-      localStorage.setItem('diagnosticStructuredData', JSON.stringify(data.structured));
-      localStorage.setItem('diagnosticStudentName', data.student?.name || '');
-      localStorage.setItem('diagnosticClassName', data.student?.className || '');
-      localStorage.setItem('diagnosticTeacherName', document.getElementById('teacherName')?.value?.trim() || '');
 
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -988,25 +980,18 @@ ${data.total?.meaning || ''}`;
       });
     }
 
-    function unlockAnalysis() {
-      const password = document.getElementById('analysisPassword').value;
-      const passwordMessage = document.getElementById('passwordMessage');
+    function showOpenAnalysis() {
       const teacherAnalysis = document.getElementById('teacherAnalysis');
-
-      if (password !== '0101') {
-        passwordMessage.innerHTML = '<p class="status-bad">קוד גישה שגוי.</p>';
-        teacherAnalysis.classList.add('hidden');
-        return;
-      }
-
+      const teacherAccess = document.getElementById('teacherAccess');
       const data = window.fullAnalysisData;
+
       if (!data) return;
 
-      passwordMessage.innerHTML = '<p class="status-ok">הגישה אושרה.</p>';
+      teacherAccess.classList.remove('hidden');
 
       teacherAnalysis.innerHTML = `
         <div class="result-box" style="background:#fff;">
-          <h3>ניתוח מפורט למורה</h3>
+          <h3>אבחון מלא</h3>
           <p><strong>שם התלמיד:</strong> ${escapeHtml(data.student.name || 'לא הוזן')}</p>
           <p><strong>כיתה:</strong> ${escapeHtml(data.student.className || 'לא הוזנה')}</p>
           <p><strong>שם המורה:</strong> ${escapeHtml(document.getElementById('teacherName')?.value?.trim() || 'לא הוזן')}</p>
@@ -1027,7 +1012,7 @@ ${data.total?.meaning || ''}`;
               <strong>ציון תחומי:</strong> ${d.percent}%<br>
               <strong>רמת שליטה:</strong> ${escapeHtml(d.level)}<br>
               <strong>אופי הקושי/הביצוע:</strong> ${escapeHtml(d.difficulty_type)}<br>
-              <strong>פירוש למורה:</strong> ${escapeHtml(d.meaning)}
+              <strong>פירוש:</strong> ${escapeHtml(d.meaning)}
             </div>
           `).join('')}
 
@@ -1058,12 +1043,13 @@ ${data.total?.meaning || ''}`;
 
           <div class="btn-row">
             <button type="button" class="copybtn" onclick="copyStructuredData()">העתק נתוני אבחון</button>
-            <button type="button" class="ghost" onclick="continueToPlanGenerator()">המשך למחולל תכנית מותאמת</button>
+            <button type="button" class="ghost" onclick="continueToPlanGenerator()">פתח תכנית למידה מותאמת</button>
           </div>
           <div id="copyMsg"></div>
         </div>
       `;
       teacherAnalysis.classList.remove('hidden');
+      teacherAccess.scrollIntoView({ behavior: 'smooth' });
     }
 
     function escapeHtml(str) {
